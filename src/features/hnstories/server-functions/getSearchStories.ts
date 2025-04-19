@@ -9,3 +9,24 @@ export const getSearchStories = createServerFn()
   .handler(async ({ data: { query, page } }) => {
     return fetchSearchStories({ query, page });
   });
+
+export const updateSearchStories = createServerFn({ method: 'POST' })
+  .validator((formData: FormData) => {
+    if (!(formData instanceof FormData)) {
+      throw new Error('Invalid form data');
+    }
+
+    const query = formData.get('q') as string;
+
+    if (!query) {
+      throw new Error('q is required');
+    }
+
+    return { query };
+  })
+  .handler(({ data: { query } }) => {
+    return new Response('ok', {
+      status: 301,
+      headers: { Location: `/search?q=${encodeURIComponent(query)}` },
+    });
+  });

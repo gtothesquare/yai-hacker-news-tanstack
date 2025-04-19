@@ -1,11 +1,15 @@
 {
   "name": "yai-hacker-news-tanstack",
   "version": "1.0.0",
-  "description": "",
+  "description": "yet another anther hacker news clone, this time tan stack",
   "scripts": {
     "dev": "vinxi dev",
     "build": "vinxi build",
-    "start": "vinxi start"
+    "lint": "pnpm eslint . --fix",
+    "typecheck": "tsc --noEmit",
+    "build:vercel": "vinxi build --preset vercel",
+    "start": "vinxi start",
+    "prepare": "husky"
   },
   "type": "module",
   "keywords": [],
@@ -37,9 +41,22 @@
     "eslint-plugin-prettier": "^5.2.6",
     "eslint-plugin-react": "^7.37.5",
     "globals": "^16.0.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^15.5.1",
     "prettier": "3.5.3",
+    "tsc-files": "^1.1.4",
     "typescript": "^5.8.3",
     "typescript-eslint": "^8.30.1",
     "vite-tsconfig-paths": "^5.1.4"
+  },
+  "lint-staged": {
+    "*.{ts,tsx,js,jsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{ts,tsx}": "tsc-files --noEmit",
+    "*.{json,css,md}": [
+      "prettier --write"
+    ]
   }
 }

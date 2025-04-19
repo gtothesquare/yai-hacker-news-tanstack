@@ -1,5 +1,4 @@
 import { twMerge } from 'tailwind-merge';
-import { generateId } from '~/lib/utils/id';
 import { InputHTMLAttributes, ReactNode } from 'react';
 
 interface Props extends InputHTMLAttributes<HTMLInputElement> {
@@ -12,6 +11,7 @@ interface Props extends InputHTMLAttributes<HTMLInputElement> {
   required?: boolean;
   disabled?: boolean;
   value?: string;
+  defaultValue?: string;
 }
 
 export const TextInput = ({
@@ -23,6 +23,7 @@ export const TextInput = ({
   placeholder,
   required,
   value,
+  defaultValue,
   disabled,
 }: Props) => {
   return (
@@ -44,6 +45,7 @@ export const TextInput = ({
         required={required}
         disabled={disabled}
         value={value}
+        defaultValue={defaultValue}
       />
       {icon && (
         <span className="pointer-events-none absolute inset-y-0 end-0 grid w-10 place-content-center text-gray-500">

@@ -2,8 +2,10 @@ import { createFileRoute } from '@tanstack/react-router';
 import { RouterLink } from '~/components/ui/RouterLink';
 import { SearchInput } from '~/components/ui/SearchInput';
 import { SearchHNStory } from '~/features/hnstories/SearchHNStory';
-import { getSearchStories } from '~/features/hnstories/server-functions/getSearchStories';
-import { pageStrToNumber } from '~/lib/utils/pageStrToNumber';
+import {
+  getSearchStories,
+  updateSearchStories,
+} from '~/features/hnstories/server-functions/getSearchStories';
 
 const getNextSearchPage = (currentPage: number) => {
   return currentPage + 1;
@@ -17,8 +19,19 @@ const getPrevSearchPage = (currentPage: number) => {
   return currentPage - 1;
 };
 
+interface QuerySerachParams {
+  q: string;
+  page: number;
+}
+
 export const Route = createFileRoute('/_pathlessLayout/search')({
   component: RouteComponent,
+  validateSearch: (search: Record<string, unknown>): QuerySerachParams => {
+    return {
+      q: (search.q as string) ?? '',
+      page: Number(search?.page ?? 1),
+    };
+  },
   loaderDeps: ({ search: { page, q } }) => ({ page, q }),
   loader: ({ deps: { page, q } }) => {
     return getSearchStories({ data: { query: q, page } });
@@ -27,12 +40,16 @@ export const Route = createFileRoute('/_pathlessLayout/search')({
 
 function RouteComponent() {
   const { page, q } = Route.useSearch();
-  const currentPage = pageStrToNumber(page);
   const stories = Route.useLoaderData();
   return (
     <div className="space-y-2">
       <div className="max-w-3xl">
-        <SearchInput currentQuery={q} />
+        <SearchInput
+          currentQuery={q}
+          url={updateSearchStories.url}
+          method={'POST'}
+          encType="multipart/form-data"
+        />
       </div>
       {stories.map((item) => (
         <SearchHNStory key={item.story_id} searchItem={item} />
@@ -44,7 +61,7 @@ function RouteComponent() {
               to={`/search`}
               search={{
                 q,
-                page: getPrevSearchPage(currentPage),
+                page: getPrevSearchPage(page),
               }}
             >
               {'<<'} Prev
@@ -54,7 +71,7 @@ function RouteComponent() {
             to={`/search`}
             search={{
               q,
-              page: getNextSearchPage(currentPage),
+              page: getNextSearchPage(page),
             }}
           >
             Next {'>>'}

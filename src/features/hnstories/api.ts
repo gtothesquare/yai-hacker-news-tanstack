@@ -30,8 +30,9 @@ export const fetchSearchStories = async ({
     return [];
   }
   const tagsParams = tags.join(',');
+  const encodedQuery = encodeURIComponent(query);
   const result = await fetchAlgoliaData<SearchResult>(
-    `/search?query=${query}&tags=${tagsParams}&page=${page}`
+    `/search?query=${encodedQuery}&tags=${tagsParams}&page=${page}`
   );
   return result.hits ?? [];
 };
