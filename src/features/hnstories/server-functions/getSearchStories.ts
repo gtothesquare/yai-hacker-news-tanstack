@@ -28,5 +28,5 @@ export const updateSearchStories = createServerFn({ method: 'POST' })
     return new Response('ok', {
       status: 301,
       headers: { Location: `/search?q=${encodeURIComponent(query)}` },
-    });
+    }) as unknown as string; // hack
   });
