@@ -6,7 +6,7 @@ import {
   Scripts,
 } from '@tanstack/react-router';
 import { TanStackRouterDevtools } from '@tanstack/react-router-devtools';
-import { Analytics } from '@vercel/analytics/react';
+//import { Analytics } from '@vercel/analytics/react';
 
 import appCss from '~/styles/app.css?url';
 import { DefaultCatchBoundary } from '~/components/DefaultCatchBoundry';
@@ -67,7 +67,7 @@ export const Route = createRootRoute({
 function RootComponent() {
   return (
     <RootDocument>
-      <Analytics />
+      {/*      <Analytics />*/}
       <Outlet />
     </RootDocument>
   );
