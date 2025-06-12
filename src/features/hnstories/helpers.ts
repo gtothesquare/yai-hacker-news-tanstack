@@ -17,6 +17,22 @@ export const getStoryUrl = (story?: PickedItem) => {
   return '';
 };
 
+export const getSearchItemUrl = (
+  story?: Pick<ItemAlgolia, 'url' | 'story_id'>
+) => {
+  if (story) {
+    if (story.url) {
+      return story.url;
+    }
+
+    if (story.story_id) {
+      return `/item/${story.story_id}`;
+    }
+  }
+
+  return '';
+};
+
 export const getComment = (story?: PickedItem) => {
   if (story) {
     return `/item/${story.id}`;

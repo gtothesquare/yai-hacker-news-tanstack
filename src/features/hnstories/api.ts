@@ -4,11 +4,11 @@ import { fetchAlgoliaData } from '~/lib/api/fetchAlgoliaData';
 
 export const fetchCommentData = async (itemId: string) => {
   const item = await fetchData<Item>(`/item/${itemId}`);
-  const { children } = await fetchAlgoliaData<ItemAlgolia>(`/items/${itemId}`);
+  const itemAlgolia = await fetchAlgoliaData<ItemAlgolia>(`/items/${itemId}`);
 
   return {
     item,
-    itemChildren: children,
+    itemChildren: itemAlgolia.children,
   };
 };
 
@@ -24,15 +24,16 @@ export const fetchTopStories = async (currentPage: number, limit: number) => {
 export const fetchSearchStories = async ({
   query,
   page = 1,
-  tags = ['story'],
+  tags = ['story', 'show_hn', 'ask_hn', 'front_page'],
 }: SearchStories) => {
   if (!query) {
     return [];
   }
+  const now = Date.now();
   const tagsParams = tags.join(',');
   const encodedQuery = encodeURIComponent(query);
   const result = await fetchAlgoliaData<SearchResult>(
-    `/search?query=${encodedQuery}&tags=${tagsParams}&page=${page}`
+    `/search_by_date?query=${encodedQuery}&tags=(${tagsParams})&page=${page}&numericFilters=created_at_i<=${now}`
   );
   return result.hits ?? [];
 };

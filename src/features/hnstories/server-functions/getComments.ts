@@ -3,6 +3,6 @@ import { fetchCommentData } from '~/features/hnstories/api';
 
 export const getComments = createServerFn()
   .validator((data: string) => data)
-  .handler(async ({ data: itemId }) => {
+  .handler(({ data: itemId }) => {
     return fetchCommentData(itemId);
   });

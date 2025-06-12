@@ -2,7 +2,7 @@ import { Link } from '~/components/ui/Link';
 import {
   getComment,
   getSearchComment,
-  getStoryUrl,
+  getSearchItemUrl,
   getTimeago,
 } from '~/features/hnstories/helpers';
 import { RouterLink } from '~/components/ui/RouterLink';
@@ -17,7 +17,7 @@ export const SearchHNStory = ({ searchItem }: Props) => {
     <div className="flex space-x-2 font-light">
       <div>
         <div className="flex space-x-2">
-          <Link href={getStoryUrl(searchItem)}>{searchItem?.title}</Link>
+          <Link href={getSearchItemUrl(searchItem)}>{searchItem?.title}</Link>
         </div>
         <div className="flex space-x-1 text-sm text-gray-500">
           <p>

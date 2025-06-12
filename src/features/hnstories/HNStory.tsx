@@ -2,7 +2,7 @@ import { Item } from '~/types';
 import { Alert } from '~/components/ui/Alert';
 import { Link } from '~/components/ui/Link';
 
-import { getComment, getTimeago, getStoryUrl } from './helpers';
+import { getComment, getStoryUrl, getTimeago } from './helpers';
 import { RouterLink } from '~/components/ui/RouterLink';
 
 interface Props {
