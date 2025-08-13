@@ -27,6 +27,11 @@ export async function apiClient(
 
     return await response.json();
   } catch (error) {
-    console.error(error.message);
+    const err = error as Error;
+    if ('message' in err) {
+      console.error(err?.message);
+    } else {
+      console.error(err);
+    }
   }
 }
