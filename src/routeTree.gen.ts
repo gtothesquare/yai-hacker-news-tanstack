@@ -8,47 +8,75 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
-// Import Routes
+import { Route as rootRouteImport } from './routes/__root'
+import { Route as PathlessLayoutRouteRouteImport } from './routes/_pathlessLayout/route'
+import { Route as PathlessLayoutIndexRouteImport } from './routes/_pathlessLayout/index'
+import { Route as PathlessLayoutSearchRouteImport } from './routes/_pathlessLayout/search'
+import { Route as PathlessLayoutPageRouteImport } from './routes/_pathlessLayout/$page'
+import { Route as PathlessLayoutItemIdRouteImport } from './routes/_pathlessLayout/item/$id'
 
-import { Route as rootRoute } from './routes/__root'
-import { Route as PathlessLayoutRouteImport } from './routes/_pathlessLayout/route'
-import { Route as PathlessLayoutIndexImport } from './routes/_pathlessLayout/index'
-import { Route as PathlessLayoutSearchImport } from './routes/_pathlessLayout/search'
-import { Route as PathlessLayoutPageImport } from './routes/_pathlessLayout/$page'
-import { Route as PathlessLayoutItemIdImport } from './routes/_pathlessLayout/item/$id'
-
-// Create/Update Routes
-
-const PathlessLayoutRouteRoute = PathlessLayoutRouteImport.update({
+const PathlessLayoutRouteRoute = PathlessLayoutRouteRouteImport.update({
   id: '/_pathlessLayout',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => rootRouteImport,
 } as any)
-
-const PathlessLayoutIndexRoute = PathlessLayoutIndexImport.update({
+const PathlessLayoutIndexRoute = PathlessLayoutIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => PathlessLayoutRouteRoute,
 } as any)
-
-const PathlessLayoutSearchRoute = PathlessLayoutSearchImport.update({
+const PathlessLayoutSearchRoute = PathlessLayoutSearchRouteImport.update({
   id: '/search',
   path: '/search',
   getParentRoute: () => PathlessLayoutRouteRoute,
 } as any)
-
-const PathlessLayoutPageRoute = PathlessLayoutPageImport.update({
+const PathlessLayoutPageRoute = PathlessLayoutPageRouteImport.update({
   id: '/$page',
   path: '/$page',
   getParentRoute: () => PathlessLayoutRouteRoute,
 } as any)
-
-const PathlessLayoutItemIdRoute = PathlessLayoutItemIdImport.update({
+const PathlessLayoutItemIdRoute = PathlessLayoutItemIdRouteImport.update({
   id: '/item/$id',
   path: '/item/$id',
   getParentRoute: () => PathlessLayoutRouteRoute,
 } as any)
 
-// Populate the FileRoutesByPath interface
+export interface FileRoutesByFullPath {
+  '/$page': typeof PathlessLayoutPageRoute
+  '/search': typeof PathlessLayoutSearchRoute
+  '/': typeof PathlessLayoutIndexRoute
+  '/item/$id': typeof PathlessLayoutItemIdRoute
+}
+export interface FileRoutesByTo {
+  '/$page': typeof PathlessLayoutPageRoute
+  '/search': typeof PathlessLayoutSearchRoute
+  '/': typeof PathlessLayoutIndexRoute
+  '/item/$id': typeof PathlessLayoutItemIdRoute
+}
+export interface FileRoutesById {
+  __root__: typeof rootRouteImport
+  '/_pathlessLayout': typeof PathlessLayoutRouteRouteWithChildren
+  '/_pathlessLayout/$page': typeof PathlessLayoutPageRoute
+  '/_pathlessLayout/search': typeof PathlessLayoutSearchRoute
+  '/_pathlessLayout/': typeof PathlessLayoutIndexRoute
+  '/_pathlessLayout/item/$id': typeof PathlessLayoutItemIdRoute
+}
+export interface FileRouteTypes {
+  fileRoutesByFullPath: FileRoutesByFullPath
+  fullPaths: '/$page' | '/search' | '/' | '/item/$id'
+  fileRoutesByTo: FileRoutesByTo
+  to: '/$page' | '/search' | '/' | '/item/$id'
+  id:
+    | '__root__'
+    | '/_pathlessLayout'
+    | '/_pathlessLayout/$page'
+    | '/_pathlessLayout/search'
+    | '/_pathlessLayout/'
+    | '/_pathlessLayout/item/$id'
+  fileRoutesById: FileRoutesById
+}
+export interface RootRouteChildren {
+  PathlessLayoutRouteRoute: typeof PathlessLayoutRouteRouteWithChildren
+}
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
@@ -56,41 +84,39 @@ declare module '@tanstack/react-router' {
       id: '/_pathlessLayout'
       path: ''
       fullPath: ''
-      preLoaderRoute: typeof PathlessLayoutRouteImport
-      parentRoute: typeof rootRoute
-    }
-    '/_pathlessLayout/$page': {
-      id: '/_pathlessLayout/$page'
-      path: '/$page'
-      fullPath: '/$page'
-      preLoaderRoute: typeof PathlessLayoutPageImport
-      parentRoute: typeof PathlessLayoutRouteImport
-    }
-    '/_pathlessLayout/search': {
-      id: '/_pathlessLayout/search'
-      path: '/search'
-      fullPath: '/search'
-      preLoaderRoute: typeof PathlessLayoutSearchImport
-      parentRoute: typeof PathlessLayoutRouteImport
+      preLoaderRoute: typeof PathlessLayoutRouteRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/_pathlessLayout/': {
       id: '/_pathlessLayout/'
       path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof PathlessLayoutIndexImport
-      parentRoute: typeof PathlessLayoutRouteImport
+      preLoaderRoute: typeof PathlessLayoutIndexRouteImport
+      parentRoute: typeof PathlessLayoutRouteRoute
+    }
+    '/_pathlessLayout/search': {
+      id: '/_pathlessLayout/search'
+      path: '/search'
+      fullPath: '/search'
+      preLoaderRoute: typeof PathlessLayoutSearchRouteImport
+      parentRoute: typeof PathlessLayoutRouteRoute
+    }
+    '/_pathlessLayout/$page': {
+      id: '/_pathlessLayout/$page'
+      path: '/$page'
+      fullPath: '/$page'
+      preLoaderRoute: typeof PathlessLayoutPageRouteImport
+      parentRoute: typeof PathlessLayoutRouteRoute
     }
     '/_pathlessLayout/item/$id': {
       id: '/_pathlessLayout/item/$id'
       path: '/item/$id'
       fullPath: '/item/$id'
-      preLoaderRoute: typeof PathlessLayoutItemIdImport
-      parentRoute: typeof PathlessLayoutRouteImport
+      preLoaderRoute: typeof PathlessLayoutItemIdRouteImport
+      parentRoute: typeof PathlessLayoutRouteRoute
     }
   }
 }
-
-// Create and export the route tree
 
 interface PathlessLayoutRouteRouteChildren {
   PathlessLayoutPageRoute: typeof PathlessLayoutPageRoute
@@ -109,91 +135,9 @@ const PathlessLayoutRouteRouteChildren: PathlessLayoutRouteRouteChildren = {
 const PathlessLayoutRouteRouteWithChildren =
   PathlessLayoutRouteRoute._addFileChildren(PathlessLayoutRouteRouteChildren)
 
-export interface FileRoutesByFullPath {
-  '': typeof PathlessLayoutRouteRouteWithChildren
-  '/$page': typeof PathlessLayoutPageRoute
-  '/search': typeof PathlessLayoutSearchRoute
-  '/': typeof PathlessLayoutIndexRoute
-  '/item/$id': typeof PathlessLayoutItemIdRoute
-}
-
-export interface FileRoutesByTo {
-  '/$page': typeof PathlessLayoutPageRoute
-  '/search': typeof PathlessLayoutSearchRoute
-  '/': typeof PathlessLayoutIndexRoute
-  '/item/$id': typeof PathlessLayoutItemIdRoute
-}
-
-export interface FileRoutesById {
-  __root__: typeof rootRoute
-  '/_pathlessLayout': typeof PathlessLayoutRouteRouteWithChildren
-  '/_pathlessLayout/$page': typeof PathlessLayoutPageRoute
-  '/_pathlessLayout/search': typeof PathlessLayoutSearchRoute
-  '/_pathlessLayout/': typeof PathlessLayoutIndexRoute
-  '/_pathlessLayout/item/$id': typeof PathlessLayoutItemIdRoute
-}
-
-export interface FileRouteTypes {
-  fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '' | '/$page' | '/search' | '/' | '/item/$id'
-  fileRoutesByTo: FileRoutesByTo
-  to: '/$page' | '/search' | '/' | '/item/$id'
-  id:
-    | '__root__'
-    | '/_pathlessLayout'
-    | '/_pathlessLayout/$page'
-    | '/_pathlessLayout/search'
-    | '/_pathlessLayout/'
-    | '/_pathlessLayout/item/$id'
-  fileRoutesById: FileRoutesById
-}
-
-export interface RootRouteChildren {
-  PathlessLayoutRouteRoute: typeof PathlessLayoutRouteRouteWithChildren
-}
-
 const rootRouteChildren: RootRouteChildren = {
   PathlessLayoutRouteRoute: PathlessLayoutRouteRouteWithChildren,
 }
-
-export const routeTree = rootRoute
+export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-/* ROUTE_MANIFEST_START
-{
-  "routes": {
-    "__root__": {
-      "filePath": "__root.tsx",
-      "children": [
-        "/_pathlessLayout"
-      ]
-    },
-    "/_pathlessLayout": {
-      "filePath": "_pathlessLayout/route.tsx",
-      "children": [
-        "/_pathlessLayout/$page",
-        "/_pathlessLayout/search",
-        "/_pathlessLayout/",
-        "/_pathlessLayout/item/$id"
-      ]
-    },
-    "/_pathlessLayout/$page": {
-      "filePath": "_pathlessLayout/$page.tsx",
-      "parent": "/_pathlessLayout"
-    },
-    "/_pathlessLayout/search": {
-      "filePath": "_pathlessLayout/search.tsx",
-      "parent": "/_pathlessLayout"
-    },
-    "/_pathlessLayout/": {
-      "filePath": "_pathlessLayout/index.tsx",
-      "parent": "/_pathlessLayout"
-    },
-    "/_pathlessLayout/item/$id": {
-      "filePath": "_pathlessLayout/item/$id.tsx",
-      "parent": "/_pathlessLayout"
-    }
-  }
-}
-ROUTE_MANIFEST_END */
