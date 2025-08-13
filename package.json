@@ -7,8 +7,7 @@
     "build": "vite build && tsc --noEmit",
     "lint": "pnpm eslint . --fix",
     "typecheck": "tsc --noEmit",
-    "build:vercel": "vinxi build --preset vercel",
-    "start": "vinxi start",
+    "start": "node .output/server/index.mjs",
     "prepare": "husky"
   },
   "type": "module",
