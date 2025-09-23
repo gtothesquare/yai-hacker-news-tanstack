@@ -1,37 +1,46 @@
-interface ApiClientOptions {
+interface ApiClientOptions<TBody = unknown> {
   method?: 'GET' | 'POST' | 'PUT' | 'DELETE';
-  body?: BodyInit;
+  body?: TBody;
+  headers?: Record<string, string>;
 }
 
-export async function apiClient(
+function isPlainObject(value: unknown): value is Record<string, unknown> {
+  return (
+    typeof value === 'object' && value !== null && value.constructor === Object
+  );
+}
+
+export async function apiClient<TResponse = unknown, TBody = unknown>(
   url: string,
-  { method, body }: ApiClientOptions = { method: 'GET' }
+  { method = 'GET', body, headers = {} }: ApiClientOptions<TBody> = {}
 ) {
   try {
-    let response: Response;
-    if (method === 'GET') {
-      response = await fetch(url);
-    } else {
-      response = await fetch(url, {
-        method,
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(body),
-      });
+    const config: RequestInit = {
+      method,
+      headers: {
+        'Content-Type': 'application/json',
+        ...headers,
+      },
+    };
+
+    //TODO add support blob
+    if (method !== 'GET' && body !== undefined) {
+      config.body = isPlainObject(body)
+        ? JSON.stringify(body)
+        : (body as string);
     }
+
+    const response = await fetch(url, config);
 
     if (!response.ok) {
-      throw new Error(`Response status: ${response.status}`);
+      const text = await response.text();
+      throw new Error(`HTTP ${response.status}: ${text}`);
     }
 
-    return await response.json();
+    const data = await response.json();
+    return data as TResponse;
   } catch (error) {
-    const err = error as Error;
-    if ('message' in err) {
-      console.error(err?.message);
-    } else {
-      console.error(err);
-    }
+    console.error('API Client Error:', error);
+    throw error;
   }
 }
