@@ -2,7 +2,7 @@ import { createServerFn } from '@tanstack/react-start';
 import { fetchSearchStories } from '~/features/hnstories/api';
 
 export const getSearchStories = createServerFn()
-  .validator((data: { query: string; page: number }) => ({
+  .inputValidator((data: { query: string; page: number }) => ({
     query: data.query,
     page: data.page,
   }))
@@ -11,7 +11,7 @@ export const getSearchStories = createServerFn()
   });
 
 export const updateSearchStories = createServerFn({ method: 'POST' })
-  .validator((formData: FormData) => {
+  .inputValidator((formData: FormData) => {
     if (!(formData instanceof FormData)) {
       throw new Error('Invalid form data');
     }
