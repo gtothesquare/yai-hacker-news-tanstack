@@ -3,7 +3,7 @@ import { fetchTopStories } from '~/features/hnstories/api';
 import { pageStrToNumber } from '~/lib/utils/pageStrToNumber';
 
 export const getTopStories = createServerFn()
-  .validator((data: { page: string; limit: number }) => {
+  .inputValidator((data: { page: string; limit: number }) => {
     const { limit, page } = data;
     return { page, limit };
   })
