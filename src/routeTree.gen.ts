@@ -9,12 +9,18 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as HealthRouteImport } from './routes/health'
 import { Route as PathlessLayoutRouteRouteImport } from './routes/_pathlessLayout/route'
 import { Route as PathlessLayoutIndexRouteImport } from './routes/_pathlessLayout/index'
 import { Route as PathlessLayoutSearchRouteImport } from './routes/_pathlessLayout/search'
 import { Route as PathlessLayoutPageRouteImport } from './routes/_pathlessLayout/$page'
 import { Route as PathlessLayoutItemIdRouteImport } from './routes/_pathlessLayout/item/$id'
 
+const HealthRoute = HealthRouteImport.update({
+  id: '/health',
+  path: '/health',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PathlessLayoutRouteRoute = PathlessLayoutRouteRouteImport.update({
   id: '/_pathlessLayout',
   getParentRoute: () => rootRouteImport,
@@ -41,12 +47,14 @@ const PathlessLayoutItemIdRoute = PathlessLayoutItemIdRouteImport.update({
 } as any)
 
 export interface FileRoutesByFullPath {
+  '/health': typeof HealthRoute
   '/$page': typeof PathlessLayoutPageRoute
   '/search': typeof PathlessLayoutSearchRoute
   '/': typeof PathlessLayoutIndexRoute
   '/item/$id': typeof PathlessLayoutItemIdRoute
 }
 export interface FileRoutesByTo {
+  '/health': typeof HealthRoute
   '/$page': typeof PathlessLayoutPageRoute
   '/search': typeof PathlessLayoutSearchRoute
   '/': typeof PathlessLayoutIndexRoute
@@ -55,6 +63,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_pathlessLayout': typeof PathlessLayoutRouteRouteWithChildren
+  '/health': typeof HealthRoute
   '/_pathlessLayout/$page': typeof PathlessLayoutPageRoute
   '/_pathlessLayout/search': typeof PathlessLayoutSearchRoute
   '/_pathlessLayout/': typeof PathlessLayoutIndexRoute
@@ -62,12 +71,13 @@ export interface FileRoutesById {
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/$page' | '/search' | '/' | '/item/$id'
+  fullPaths: '/health' | '/$page' | '/search' | '/' | '/item/$id'
   fileRoutesByTo: FileRoutesByTo
-  to: '/$page' | '/search' | '/' | '/item/$id'
+  to: '/health' | '/$page' | '/search' | '/' | '/item/$id'
   id:
     | '__root__'
     | '/_pathlessLayout'
+    | '/health'
     | '/_pathlessLayout/$page'
     | '/_pathlessLayout/search'
     | '/_pathlessLayout/'
@@ -76,10 +86,18 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   PathlessLayoutRouteRoute: typeof PathlessLayoutRouteRouteWithChildren
+  HealthRoute: typeof HealthRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/health': {
+      id: '/health'
+      path: '/health'
+      fullPath: '/health'
+      preLoaderRoute: typeof HealthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_pathlessLayout': {
       id: '/_pathlessLayout'
       path: ''
@@ -137,6 +155,7 @@ const PathlessLayoutRouteRouteWithChildren =
 
 const rootRouteChildren: RootRouteChildren = {
   PathlessLayoutRouteRoute: PathlessLayoutRouteRouteWithChildren,
+  HealthRoute: HealthRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
