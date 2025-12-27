@@ -22,6 +22,8 @@ RUN pnpm build
 # 3. Production runner
 # ----------------------
 FROM node:24-slim AS runner
+# Add to enable coolify helath check
+RUN apk add --no-cache curl
 WORKDIR /app
 
 ENV NODE_ENV=production
