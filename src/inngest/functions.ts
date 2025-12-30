@@ -3,6 +3,7 @@ import { inngest } from './client';
 import { fetchTopStories } from '~/features/hnstories/api';
 import { db } from '~/db';
 import { stories } from '~/db/schema';
+import { sql } from 'drizzle-orm';
 
 const saveTopStories = inngest.createFunction(
   {
@@ -35,7 +36,11 @@ const saveTopStories = inngest.createFunction(
           })
           .onConflictDoUpdate({
             target: stories.id,
-            set: { score: story.score, descendants: story.descendants },
+            set: {
+              score: story.score,
+              descendants: story.descendants,
+              updatedAt: sql`NOW()`,
+            },
           });
       }
     });
