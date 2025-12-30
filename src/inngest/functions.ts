@@ -11,7 +11,7 @@ const saveTopStories = inngest.createFunction(
   { event: 'stories/save.top.stories' },
   async ({ step }) => {
     const topStories = await step.run('fetch-top-stories', async () => {
-      const items = await fetchTopStories(0, 400);
+      const items = await fetchTopStories(1, 400);
       return items;
     });
 
