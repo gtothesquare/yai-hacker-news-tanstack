@@ -8,7 +8,8 @@
     "lint": "pnpm eslint . --fix",
     "typecheck": "tsc --noEmit",
     "start": "node .output/server/index.mjs",
-    "prepare": "husky"
+    "prepare": "husky",
+    "db:migrate": "drizzle-kit push"
   },
   "type": "module",
   "keywords": [],
@@ -19,8 +20,12 @@
     "@tanstack/react-router-devtools": "^1.143.11",
     "@tanstack/react-start": "^1.143.11",
     "autoprefixer": "^10.4.23",
+    "dotenv": "^17.2.3",
+    "drizzle-orm": "^0.45.1",
+    "inngest": "^3.48.1",
     "nitro": "3.0.1-alpha.1",
     "postcss": "^8.5.6",
+    "postgres": "^3.4.7",
     "react": "^19.2.3",
     "react-dom": "^19.2.3",
     "tailwind-merge": "^3.4.0",
@@ -36,6 +41,7 @@
     "@types/react": "^19.2.7",
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^4.7.0",
+    "drizzle-kit": "^0.31.8",
     "eslint": "^9.39.2",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-prettier": "^5.5.4",
@@ -45,6 +51,7 @@
     "lint-staged": "^15.5.2",
     "prettier": "3.5.3",
     "tsc-files": "^1.1.4",
+    "tsx": "^4.21.0",
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.50.1",
     "vite": "^7.3.0",
@@ -59,8 +66,5 @@
     "*.{json,css,md}": [
       "prettier --write"
     ]
-  },
-  "engines": {
-    "node": "24"
   }
 }

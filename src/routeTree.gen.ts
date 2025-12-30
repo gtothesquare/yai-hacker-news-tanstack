@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as HealthRouteImport } from './routes/health'
 import { Route as PathlessLayoutRouteRouteImport } from './routes/_pathlessLayout/route'
 import { Route as PathlessLayoutIndexRouteImport } from './routes/_pathlessLayout/index'
+import { Route as ApiInngestRouteImport } from './routes/api/inngest'
 import { Route as PathlessLayoutSearchRouteImport } from './routes/_pathlessLayout/search'
 import { Route as PathlessLayoutPageRouteImport } from './routes/_pathlessLayout/$page'
 import { Route as PathlessLayoutItemIdRouteImport } from './routes/_pathlessLayout/item/$id'
@@ -29,6 +30,11 @@ const PathlessLayoutIndexRoute = PathlessLayoutIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => PathlessLayoutRouteRoute,
+} as any)
+const ApiInngestRoute = ApiInngestRouteImport.update({
+  id: '/api/inngest',
+  path: '/api/inngest',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const PathlessLayoutSearchRoute = PathlessLayoutSearchRouteImport.update({
   id: '/search',
@@ -50,6 +56,7 @@ export interface FileRoutesByFullPath {
   '/health': typeof HealthRoute
   '/$page': typeof PathlessLayoutPageRoute
   '/search': typeof PathlessLayoutSearchRoute
+  '/api/inngest': typeof ApiInngestRoute
   '/': typeof PathlessLayoutIndexRoute
   '/item/$id': typeof PathlessLayoutItemIdRoute
 }
@@ -57,6 +64,7 @@ export interface FileRoutesByTo {
   '/health': typeof HealthRoute
   '/$page': typeof PathlessLayoutPageRoute
   '/search': typeof PathlessLayoutSearchRoute
+  '/api/inngest': typeof ApiInngestRoute
   '/': typeof PathlessLayoutIndexRoute
   '/item/$id': typeof PathlessLayoutItemIdRoute
 }
@@ -66,20 +74,28 @@ export interface FileRoutesById {
   '/health': typeof HealthRoute
   '/_pathlessLayout/$page': typeof PathlessLayoutPageRoute
   '/_pathlessLayout/search': typeof PathlessLayoutSearchRoute
+  '/api/inngest': typeof ApiInngestRoute
   '/_pathlessLayout/': typeof PathlessLayoutIndexRoute
   '/_pathlessLayout/item/$id': typeof PathlessLayoutItemIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/health' | '/$page' | '/search' | '/' | '/item/$id'
+  fullPaths:
+    | '/health'
+    | '/$page'
+    | '/search'
+    | '/api/inngest'
+    | '/'
+    | '/item/$id'
   fileRoutesByTo: FileRoutesByTo
-  to: '/health' | '/$page' | '/search' | '/' | '/item/$id'
+  to: '/health' | '/$page' | '/search' | '/api/inngest' | '/' | '/item/$id'
   id:
     | '__root__'
     | '/_pathlessLayout'
     | '/health'
     | '/_pathlessLayout/$page'
     | '/_pathlessLayout/search'
+    | '/api/inngest'
     | '/_pathlessLayout/'
     | '/_pathlessLayout/item/$id'
   fileRoutesById: FileRoutesById
@@ -87,6 +103,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   PathlessLayoutRouteRoute: typeof PathlessLayoutRouteRouteWithChildren
   HealthRoute: typeof HealthRoute
+  ApiInngestRoute: typeof ApiInngestRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -111,6 +128,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/'
       preLoaderRoute: typeof PathlessLayoutIndexRouteImport
       parentRoute: typeof PathlessLayoutRouteRoute
+    }
+    '/api/inngest': {
+      id: '/api/inngest'
+      path: '/api/inngest'
+      fullPath: '/api/inngest'
+      preLoaderRoute: typeof ApiInngestRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/_pathlessLayout/search': {
       id: '/_pathlessLayout/search'
@@ -156,6 +180,7 @@ const PathlessLayoutRouteRouteWithChildren =
 const rootRouteChildren: RootRouteChildren = {
   PathlessLayoutRouteRoute: PathlessLayoutRouteRouteWithChildren,
   HealthRoute: HealthRoute,
+  ApiInngestRoute: ApiInngestRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

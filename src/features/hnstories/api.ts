@@ -16,9 +16,11 @@ export const fetchTopStories = async (currentPage: number, limit: number) => {
   const topStories = await fetchData<Array<number>>('topstories');
   const offset = (currentPage - 1) * limit;
   const pageStoryIds = topStories.slice(offset, limit + offset);
-  return await Promise.all(
+  const topStoriesData = await Promise.all(
     pageStoryIds.map((storyId) => fetchData<Item>(`item/${storyId}`))
   );
+
+  return topStoriesData;
 };
 
 export const fetchSearchStories = async ({
