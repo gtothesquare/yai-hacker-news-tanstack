@@ -15,3 +15,5 @@ Inngest UI
 ```
 pnpm dlx inngest-cli@latest dev
 ```
+
+then http://localhost:3000/api/inngest
