@@ -9,7 +9,8 @@
     "typecheck": "tsc --noEmit",
     "start": "node .output/server/index.mjs",
     "prepare": "husky",
-    "db:migrate": "drizzle-kit push"
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "drizzle-kit migrate"
   },
   "type": "module",
   "keywords": [],
