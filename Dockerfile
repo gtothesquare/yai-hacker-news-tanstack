@@ -35,9 +35,11 @@ RUN addgroup --system --gid 1001 nodejs && \
     adduser --system --uid 1001 nodejs
 
 # Copy only the build output
-COPY --from=deps /app/node_modules ./node_modules
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/package.json ./package.json
 COPY --from=builder /app/.output ./.output
 COPY --from=builder /app/drizzle ./drizzle
+COPY --from=builder /app/drizzle.config.ts ./drizzle.config.ts
 
 # Writable directory for runtime data
 RUN mkdir -p /app/data && \
@@ -56,4 +58,5 @@ ENV HACKER_NEWS_API=${HACKER_NEWS_API}
 # ----------------------
 EXPOSE 3000
 USER nodejs
-CMD pnpm run db:migrate && pnpm run start
+
+CMD ["sh", "-c", "pnpm run db:migrate && exec pnpm run start"]
