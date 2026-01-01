@@ -36,6 +36,7 @@ RUN addgroup --system --gid 1001 nodejs && \
 
 # Copy only the build output
 COPY --from=deps /app/node_modules ./node_modules
+COPY --from=deps /app/package.json ./package.json
 COPY --from=builder /app/.output ./.output
 COPY --from=builder /app/drizzle ./drizzle
 
