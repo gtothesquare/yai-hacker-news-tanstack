@@ -1,8 +1,10 @@
+export type ItemType = 'comment' | 'story' | 'job' | 'poll' | 'pollopt';
+
 export interface Item {
   id: number;
   by: string;
   title: string;
-  type: 'comment' | 'story' | 'job' | 'poll' | 'pollopt';
+  type: ItemType;
   kids: number[];
   score: number;
   time: number;
@@ -16,7 +18,7 @@ export interface ItemComment {
   id: number;
   by: string;
   time: number;
-  comments: ItemComment[];
+  comments: Array<ItemComment>;
   commentsCount: number;
   parent?: number;
   text?: string;
@@ -27,7 +29,7 @@ export interface ItemAlgolia {
   id: number;
   created_at: string;
   created_at_i: number;
-  type: 'comment' | 'story' | 'job' | 'poll' | 'pollopt';
+  type: ItemType;
   title: string;
   url: string;
   text?: string;
@@ -35,7 +37,7 @@ export interface ItemAlgolia {
   author: string;
   parent_id?: number;
   story_id?: number;
-  children: [ItemAlgolia];
+  children: Array<ItemAlgolia>;
   num_comments: number;
 }
 

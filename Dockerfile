@@ -24,6 +24,7 @@ RUN pnpm build
 FROM node:24-slim AS runner
 # Install curl for healthchecks (Debian-based)
 RUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/*
+RUN npm install -g pnpm
 
 WORKDIR /app
 
@@ -33,12 +34,14 @@ ENV NODE_ENV=production
 RUN addgroup --system --gid 1001 nodejs && \
     adduser --system --uid 1001 nodejs
 
+# Copy only the build output
+COPY --from=deps /app/node_modules ./node_modules
+COPY --from=builder /app/.output ./.output
+COPY --from=builder /app/drizzle ./drizzle
+
 # Writable directory for runtime data
 RUN mkdir -p /app/data && \
-    chown -R nodejs:nodejs /app/data
-
-# Copy only the build output
-COPY --from=builder /app/.output ./.output
+    chown -R nodejs:nodejs /app
 
 # ----------------------
 # Pass build-time vars to runtime
@@ -53,4 +56,4 @@ ENV HACKER_NEWS_API=${HACKER_NEWS_API}
 # ----------------------
 EXPOSE 3000
 USER nodejs
-CMD ["node", ".output/server/index.mjs"]
+CMD pnpm run db:migrate && pnpm run start

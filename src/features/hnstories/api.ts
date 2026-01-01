@@ -2,7 +2,13 @@ import { fetchData } from '~/lib/api/fetchData';
 import { Item, ItemAlgolia, SearchResult, SearchStories } from '~/types';
 import { fetchAlgoliaData } from '~/lib/api/fetchAlgoliaData';
 
-export const fetchCommentData = async (itemId: string) => {
+function fulfilled<T>(
+  r: PromiseSettledResult<T>
+): r is PromiseFulfilledResult<T> {
+  return r.status === 'fulfilled';
+}
+
+export const fetchCommentData = async (itemId: number) => {
   const item = await fetchData<Item>(`/item/${itemId}`);
   const itemAlgolia = await fetchAlgoliaData<ItemAlgolia>(`/items/${itemId}`);
 
@@ -12,13 +18,33 @@ export const fetchCommentData = async (itemId: string) => {
   };
 };
 
+export const fetchTopStoriesWithComments = async (
+  currentPage: number,
+  limit: number
+) => {
+  const topStories = await fetchData<Array<number>>('topstories');
+  const offset = (currentPage - 1) * limit;
+  const pageStoryIds = topStories.slice(offset, limit + offset);
+  const topStoriesResult = await Promise.allSettled(
+    pageStoryIds.map((storyId) => fetchCommentData(storyId))
+  );
+
+  const topStoriesData = topStoriesResult.filter(fulfilled).map((r) => r.value);
+
+  return topStoriesData;
+};
+
 export const fetchTopStories = async (currentPage: number, limit: number) => {
   const topStories = await fetchData<Array<number>>('topstories');
   const offset = (currentPage - 1) * limit;
   const pageStoryIds = topStories.slice(offset, limit + offset);
-  return await Promise.all(
+  const topStoriesResult = await Promise.allSettled(
     pageStoryIds.map((storyId) => fetchData<Item>(`item/${storyId}`))
   );
+
+  const topStoriesData = topStoriesResult.filter(fulfilled).map((r) => r.value);
+
+  return topStoriesData;
 };
 
 export const fetchSearchStories = async ({
