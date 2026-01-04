@@ -4,4 +4,21 @@ type SaveTopStoriesEvent = {
   name: 'stories/save.top.stories';
 };
 
-export const schemas = new EventSchemas().fromUnion<SaveTopStoriesEvent>();
+type InitializeTypesenseCollectionsEvent = {
+  name: 'typesense/init-collections';
+};
+
+type SyncTopStoriesEvent = {
+  name: 'typesense/sync-top-stories';
+};
+
+type SyncCommentsEvent = {
+  name: 'typesense/sync-comments';
+};
+
+export const schemas = new EventSchemas().fromUnion<
+  | SaveTopStoriesEvent
+  | InitializeTypesenseCollectionsEvent
+  | SyncTopStoriesEvent
+  | SyncCommentsEvent
+>();
