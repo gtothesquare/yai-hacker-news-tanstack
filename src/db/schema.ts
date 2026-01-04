@@ -23,7 +23,7 @@ export type Story = InferSelectModel<typeof stories>;
 
 export const comments = pgTable('comments', {
   id: integer('id').primaryKey().notNull(),
-  author: text('author').notNull(),
+  author: text('author'),
   parentId: integer('parent_id'),
   storyId: integer('story_id'),
   text: text('text'),
