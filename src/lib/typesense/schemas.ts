@@ -16,10 +16,6 @@ export const commentsSchema = {
   name: 'comments',
   fields: [
     {
-      name: 'title',
-      type: 'string',
-    },
-    {
       name: 'author',
       type: 'string',
       optional: true,
