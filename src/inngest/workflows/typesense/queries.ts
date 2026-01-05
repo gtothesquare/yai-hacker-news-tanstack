@@ -1,6 +1,11 @@
 import { db } from '~/db';
 import { comments, stories, typesenseSync } from '~/db/schema';
-import { sql, gte, and, eq } from 'drizzle-orm';
+import { sql, gte, and, eq, getTableColumns, Table } from 'drizzle-orm';
+
+const renameId = <T extends Table>(table: T, newName: string) => {
+  const { id, ...rest } = getTableColumns(table);
+  return { ...rest, [newName]: id };
+};
 
 export const lastTypesenseSyncQuery = db
   .select()
@@ -31,13 +36,13 @@ export const updateTypesenseSyncQuery = db
   .prepare('updateSyncQuery');
 
 export const storiesQuery = db
-  .select()
+  .select(renameId(stories, 'storiesId'))
   .from(stories)
   .where(gte(stories.updatedAt, sql.placeholder('lastSync')))
   .prepare('getStories');
 
 export const commentsQuery = db
-  .select()
+  .select(renameId(comments, 'commentId'))
   .from(comments)
   .where(gte(comments.createdAt, sql.placeholder('lastSync')))
   .prepare('getStories');
