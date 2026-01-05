@@ -28,27 +28,33 @@ export const syncTypesenseStoriesDocuments = inngest.createFunction(
     id: 'typesense-sync-top-stories',
   },
   {
-    event: 'typesense/sync-top-stories',
+    event: 'typesense/sync-collections',
   },
   async ({ step }) => {
-    await step.run('sync-top-stories', async () => {
+    const result = await step.run('sync-top-stories', async () => {
       const lastSync = await getLastSync('stories');
       const documents = await storiesQuery.execute({ lastSync });
       const newSync = await newTypesenseSyncQuery.execute({
         collectionName: 'stories',
       });
-      const total = await batchSyncDocuments('stories', documents);
-      if (total === documents.length) {
-        await updateTypesenseSyncQuery.execute({
-          id: newSync[0].id,
-          status: 'completed',
-        });
-      } else {
-        await updateTypesenseSyncQuery.execute({
-          id: newSync[0].id,
-          status: 'failed',
-        });
+      try {
+        const total = await batchSyncDocuments('stories', documents);
+
+        return {
+          ok: total === documents.length,
+          newSyncId: newSync[0].id,
+        };
+      } catch (_err) {
+        return {
+          ok: false,
+          newSyncId: newSync[0].id,
+        };
       }
+    });
+
+    await updateTypesenseSyncQuery.execute({
+      id: result.newSyncId,
+      status: result.ok ? 'completed' : 'failed',
     });
   }
 );
@@ -58,27 +64,34 @@ export const syncTypesenseCommentsDocuments = inngest.createFunction(
     id: 'typesense-sync-comments',
   },
   {
-    event: 'typesense/sync-comments',
+    event: 'typesense/sync-collections',
   },
   async ({ step }) => {
-    await step.run('sync-comments', async () => {
+    const result = await step.run('sync-comments', async () => {
       const lastSync = await getLastSync('comments');
       const documents = await commentsQuery.execute({ lastSync });
       const newSync = await newTypesenseSyncQuery.execute({
         collectionName: 'comments',
       });
-      const total = await batchSyncDocuments('comments', documents);
-      if (total === documents.length) {
-        await updateTypesenseSyncQuery.execute({
-          id: newSync[0].id,
-          status: 'completed',
-        });
-      } else {
-        await updateTypesenseSyncQuery.execute({
-          id: newSync[0].id,
-          status: 'failed',
-        });
+
+      try {
+        const total = await batchSyncDocuments('comments', documents);
+
+        return {
+          ok: total === documents.length,
+          newSyncId: newSync[0].id,
+        };
+      } catch (_err) {
+        return {
+          ok: false,
+          newSyncId: newSync[0].id,
+        };
       }
+    });
+
+    await updateTypesenseSyncQuery.execute({
+      id: result.newSyncId,
+      status: result.ok ? 'completed' : 'failed',
     });
   }
 );
