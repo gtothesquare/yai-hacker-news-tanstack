@@ -1,6 +1,10 @@
 import { typesenseClient } from './client';
 import { SchemaKey, schemas } from './schemas';
 import { Errors } from 'typesense';
+import {
+  CollectionDropFieldSchema,
+  CollectionFieldSchema,
+} from 'typesense/lib/Typesense/Collection';
 
 export async function ensureCollection(schemaKey: SchemaKey) {
   const schema = schemas[schemaKey];
@@ -30,6 +34,13 @@ export async function initializeAllCollections() {
 
 export async function deleteCollection(schemaKey: SchemaKey) {
   await typesenseClient.collections(schemaKey).delete();
+}
+
+export async function updateCollectionFields(
+  schemaKey: SchemaKey,
+  fields: (CollectionFieldSchema | CollectionDropFieldSchema)[]
+) {
+  await typesenseClient.collections(schemaKey).update({ fields });
 }
 
 export async function deleteAllCollections() {
