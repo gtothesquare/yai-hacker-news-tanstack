@@ -27,3 +27,15 @@ export async function initializeAllCollections() {
     await ensureCollection(key);
   }
 }
+
+export async function deleteCollection(schemaKey: SchemaKey) {
+  await typesenseClient.collections(schemaKey).delete();
+}
+
+export async function deleteAllCollections() {
+  const schemaKeys = Object.keys(schemas) as Array<SchemaKey>;
+
+  for (const key of schemaKeys) {
+    await deleteCollection(key);
+  }
+}
