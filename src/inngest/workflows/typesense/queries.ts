@@ -30,7 +30,7 @@ export const updateTypesenseSyncQuery = db
   .update(typesenseSync)
   .set({
     status: sql`${sql.placeholder('status')}`,
-    lastSyncedAt: new Date(),
+    lastSyncedAt: sql`NOW()`,
   })
   .where(eq(typesenseSync.id, sql.placeholder('id')))
   .prepare('updateSyncQuery');
