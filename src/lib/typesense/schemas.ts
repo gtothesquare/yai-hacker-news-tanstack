@@ -8,8 +8,9 @@ export const storiesSchema = {
     { name: 'title', type: 'string' },
     { name: 'text', type: 'string' },
     { name: 'url', type: 'string' },
+    { name: 'createdAt', type: 'string', sort: true },
   ],
-  default_sorting_field: 'created_at',
+  default_sorting_field: 'createdAt',
 } as const satisfies CollectionCreateSchema;
 
 export const commentsSchema = {
