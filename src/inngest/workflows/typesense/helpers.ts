@@ -6,5 +6,5 @@ export const getLastSync = async (collectionName: SchemaKey) => {
   if (result.length === 0) {
     return new Date(0).toISOString();
   }
-  return result[0].createdAt;
+  return result[0].createdAt.toISOString();
 };
