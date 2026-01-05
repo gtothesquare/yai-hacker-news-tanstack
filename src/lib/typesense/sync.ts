@@ -24,7 +24,7 @@ export async function syncDocument<T extends Record<string, string>>(
   }
 }
 
-export async function batchSyncDocuments<T extends { id: number }>(
+export async function batchSyncDocuments<T extends Record<string, unknown>>(
   collectionName: string,
   documents: T[],
   action: 'create' | 'upsert' | 'update' = 'upsert'
