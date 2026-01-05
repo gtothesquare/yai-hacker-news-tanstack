@@ -45,4 +45,4 @@ export const commentsQuery = db
   .select(renameId(comments, 'commentId'))
   .from(comments)
   .where(gte(comments.createdAt, sql.placeholder('lastSync')))
-  .prepare('getStories');
+  .prepare('getComments');
