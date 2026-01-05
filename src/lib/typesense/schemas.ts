@@ -3,7 +3,6 @@ import { CollectionCreateSchema } from 'typesense/lib/Typesense/Collections';
 export const storiesSchema = {
   name: 'stories',
   fields: [
-    { name: 'id', type: 'int32' },
     { name: 'by', type: 'string' },
     { name: 'title', type: 'string' },
     { name: 'text', type: 'string' },
@@ -16,10 +15,6 @@ export const storiesSchema = {
 export const commentsSchema = {
   name: 'comments',
   fields: [
-    {
-      name: 'id',
-      type: 'int32',
-    },
     {
       name: 'title',
       type: 'string',
