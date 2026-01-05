@@ -28,7 +28,20 @@ export default defineConfig([
       'react/react-in-jsx-scope': 'off',
     },
   },
-  tseslint.configs.recommended,
+  ...tseslint.configs.recommended,
+  {
+    rules: {
+      'no-unused-vars': 'off',
+      '@typescript-eslint/no-unused-vars': [
+        'error',
+        {
+          argsIgnorePattern: '^_',
+          varsIgnorePattern: '^_',
+          caughtErrorsIgnorePattern: '^_',
+        },
+      ],
+    },
+  },
   {
     files: ['**/*.json'],
     plugins: { json },

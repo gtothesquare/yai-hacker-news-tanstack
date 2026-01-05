@@ -8,17 +8,12 @@ type InitializeTypesenseCollectionsEvent = {
   name: 'typesense/init-collections';
 };
 
-type SyncTopStoriesEvent = {
-  name: 'typesense/sync-top-stories';
-};
-
-type SyncCommentsEvent = {
-  name: 'typesense/sync-comments';
+type SyncCollectionsEvent = {
+  name: 'typesense/sync-collections';
 };
 
 export const schemas = new EventSchemas().fromUnion<
   | SaveTopStoriesEvent
   | InitializeTypesenseCollectionsEvent
-  | SyncTopStoriesEvent
-  | SyncCommentsEvent
+  | SyncCollectionsEvent
 >();
