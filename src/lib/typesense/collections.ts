@@ -27,9 +27,9 @@ export async function ensureCollection(schemaKey: SchemaKey) {
 export async function initializeAllCollections() {
   const schemaKeys = Object.keys(schemas) as Array<SchemaKey>;
 
-  for (const key of schemaKeys) {
-    await ensureCollection(key);
-  }
+  const initActions = schemaKeys.map((key) => ensureCollection(key));
+
+  return Promise.all(initActions);
 }
 
 export async function deleteCollection(schemaKey: SchemaKey) {
@@ -46,7 +46,7 @@ export async function updateCollectionFields(
 export async function deleteAllCollections() {
   const schemaKeys = Object.keys(schemas) as Array<SchemaKey>;
 
-  for (const key of schemaKeys) {
-    await deleteCollection(key);
-  }
+  const actions = schemaKeys.map((key) => deleteCollection(key));
+
+  return Promise.all(actions);
 }
