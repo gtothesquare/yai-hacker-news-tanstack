@@ -29,7 +29,7 @@ export const saveTopStories = inngest.createFunction(
       }
     });
 
-    //await inngest.send({ name: 'typesense/sync-collections', data: {} });
+    await inngest.send({ name: 'typesense/sync-collections', data: {} });
   }
 );
 
@@ -56,6 +56,6 @@ export const saveTopStoriesCron = inngest.createFunction(
       }
     });
 
-    //await inngest.send({ name: 'typesense/sync-collections', data: {} });
+    await inngest.send({ name: 'typesense/sync-collections', data: {} });
   }
 );

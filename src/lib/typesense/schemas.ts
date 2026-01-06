@@ -25,6 +25,7 @@ export const commentsSchema = {
       type: 'string',
       optional: true,
     },
+    { name: 'createdAt', type: 'string', sort: true },
   ],
 } as const satisfies CollectionCreateSchema;
 
