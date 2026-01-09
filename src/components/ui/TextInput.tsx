@@ -39,7 +39,7 @@ export const TextInput = ({
         id={id}
         placeholder={placeholder}
         className={twMerge(
-          'mt-1 w-full text-white bg-slate-700 rounded-md border-gray-700 shadow-sm sm:text-sm disabled:cursor disabled:opacity-75 disabled:cursor-not-allowed',
+          ' mt-1 w-full text-white bg-slate-700 rounded-md border-gray-700 shadow-sm sm:text-sm disabled:cursor disabled:opacity-75 disabled:cursor-not-allowed',
           icon && 'pe-10'
         )}
         required={required}

@@ -41,18 +41,32 @@ export interface ItemAlgolia {
   num_comments: number;
 }
 
-export interface SearchItem {
+export interface SearchStoryItem {
   id: number;
-  created_at: string;
-  created_at_i: number;
+  by: string;
   title: string;
-  url: string;
+  type: ItemType;
+  kids: number[];
+  score: number;
+  time: number;
+  descendants: number;
+  text?: string;
+  parent?: number;
+  url?: string;
+}
+
+export interface SearchCommentItem {
+  id: string;
+  createdAt: string;
+  createdAtI: number;
+  url?: string;
+  text?: string;
   points: number;
   author: string;
-  num_comments: number;
-  objectID: number;
-  relevancy_score: number;
-  parent_id?: number;
+  parentId?: number;
+  updatedAt: string;
+  kids: number[];
+  storyId: number;
 }
 
 export interface SearchResult {

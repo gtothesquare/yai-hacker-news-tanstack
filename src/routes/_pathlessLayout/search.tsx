@@ -2,12 +2,12 @@ import { createFileRoute } from '@tanstack/react-router';
 import { RouterLink } from '~/components/ui/RouterLink';
 import { SearchInput } from '~/components/ui/SearchInput';
 import { updateSearchStories } from '~/features/hnstories/server-functions/getSearchStories';
-import { Item, ItemAlgolia } from '~/types';
-import { HNStory } from '~/features/hnstories/HNStory';
+import { SearchCommentItem, SearchStoryItem } from '~/types';
 import { getPlace } from '~/features/hnstories/helpers';
 import { searchClient } from '~/features/search/searchClient';
 import { SearchCommentResult } from '~/features/search/SearchCommentResult';
 import { LIMIT } from '~/config';
+import { SearchStoryResult } from '~/features/search/SearchStoryResult';
 
 const getNextSearchPage = (currentPage: number) => {
   return currentPage + 1;
@@ -26,9 +26,9 @@ interface QuerySearchParams {
   page: number;
 }
 
-type SearchResult = Item | ItemAlgolia;
+type SearchResult = SearchStoryItem | SearchCommentItem;
 
-function isStory(doc: SearchResult): doc is Item {
+function isStory(doc: SearchResult): doc is SearchStoryItem {
   return 'title' in doc;
 }
 
@@ -89,8 +89,9 @@ function RouteComponent() {
       {hits.map((item, i) => {
         const doc = item.document;
         const place = getPlace(page, LIMIT, i);
+        console.log(doc);
         if (isStory(doc)) {
-          return <HNStory key={doc.id} story={doc} place={place} />;
+          return <SearchStoryResult key={doc.id} story={doc} place={place} />;
         }
         return (
           <SearchCommentResult commentItem={doc} place={place} key={doc.id} />
