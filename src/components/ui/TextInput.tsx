@@ -29,7 +29,7 @@ export const TextInput = ({
   return (
     <div className="w-full">
       {label && (
-        <label htmlFor={id} className="block text-xs font-medium text-gray-700">
+        <label htmlFor={id} className="block text-sm font-medium text-gray-400">
           {label}
         </label>
       )}
@@ -39,7 +39,7 @@ export const TextInput = ({
         id={id}
         placeholder={placeholder}
         className={twMerge(
-          'mt-1 w-full text-white bg-slate-700 rounded-md border-gray-700 shadow-sm sm:text-sm disabled:cursor disabled:opacity-75 disabled:cursor-not-allowed',
+          'focus:ring-0 focus:border-neutral-500 mt-1 w-full text-white bg-slate-700 rounded-md border-gray-700 shadow-sm sm:text-sm disabled:cursor disabled:opacity-75 disabled:cursor-not-allowed',
           icon && 'pe-10'
         )}
         required={required}

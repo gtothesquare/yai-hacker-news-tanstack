@@ -1,23 +1,36 @@
-import { ItemAlgolia } from '~/types';
+import { SearchCommentItem } from '~/types';
 import { format } from 'timeago.js';
 import { RouterLink } from '~/components/ui/RouterLink';
 
 interface Props {
-  commentItem: Omit<ItemAlgolia, 'children'>;
+  commentItem: SearchCommentItem;
   place: number;
 }
 
 export const SearchCommentResult = ({ commentItem, place }: Props) => {
-  const { author, created_at_i, parent_id, text } = commentItem;
+  const { author, createdAtI, parentId, storyId, text } = commentItem;
+
   return (
     <div className="flex space-x-2">
       <div className="font-light text-gray-500">{place}.</div>
       <div className="flex flex-col text-xs md:text-sm">
-        <div className="text-gray-500 flex space-x-1 pt-4 pb-0.5">
+        <div className="text-gray-500 flex space-x-1 pb-0.5">
           <p>
-            {author} {format(created_at_i * 1000)} |{' '}
-            {parent_id ? (
-              <RouterLink href={`#${parent_id}`}>parent</RouterLink>
+            {author} {format(createdAtI * 1000)}
+            {parentId ? (
+              <>
+                {' '}
+                |{' '}
+                <RouterLink href={`/item/${storyId}#${parentId}`}>
+                  parent
+                </RouterLink>
+              </>
+            ) : null}
+            {storyId ? (
+              <>
+                {' '}
+                | <RouterLink href={`/item/${storyId}`}>story </RouterLink>
+              </>
             ) : null}
           </p>
         </div>
