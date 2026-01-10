@@ -9,24 +9,24 @@ import { SearchCommentResult } from '~/features/search/SearchCommentResult';
 import { LIMIT } from '~/config';
 import { SearchStoryResult } from '~/features/search/SearchStoryResult';
 
-const getNextSearchPage = (currentPage: number) => {
-  return currentPage + 1;
-};
-
-const getPrevSearchPage = (currentPage: number) => {
-  if (currentPage <= 1) {
-    return 1;
-  }
-
-  return currentPage - 1;
-};
-
 interface QuerySearchParams {
   q: string;
   page: number;
 }
 
 type SearchResult = SearchStoryItem | SearchCommentItem;
+
+function getNextSearchPage(currentPage: number) {
+  return currentPage + 1;
+}
+
+function getPrevSearchPage(currentPage: number) {
+  if (currentPage <= 1) {
+    return 1;
+  }
+
+  return currentPage - 1;
+}
 
 function isStory(doc: SearchResult): doc is SearchStoryItem {
   return 'title' in doc;
