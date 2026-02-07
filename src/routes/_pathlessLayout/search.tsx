@@ -89,7 +89,6 @@ function RouteComponent() {
       {hits.map((item, i) => {
         const doc = item.document;
         const place = getPlace(page, LIMIT, i);
-        console.log(doc);
         if (isStory(doc)) {
           return <SearchStoryResult key={doc.id} story={doc} place={place} />;
         }

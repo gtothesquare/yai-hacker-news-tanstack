@@ -11,7 +11,6 @@ export async function ensureCollection(schemaKey: SchemaKey) {
 
   try {
     await typesenseClient.collections(schema.name).retrieve();
-    console.log(`✓ Collection '${schema.name}' exists`);
   } catch (err: unknown) {
     const error = err as Errors.TypesenseError;
     if (error.httpStatus === 404) {
