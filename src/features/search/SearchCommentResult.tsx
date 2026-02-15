@@ -1,6 +1,6 @@
 import { SearchCommentItem } from '~/types';
-import { format } from 'timeago.js';
 import { RouterLink } from '~/components/ui/RouterLink';
+import { getTimeago } from '~/features/hnstories/helpers';
 
 interface Props {
   commentItem: SearchCommentItem;
@@ -16,7 +16,7 @@ export const SearchCommentResult = ({ commentItem, place }: Props) => {
       <div className="flex flex-col text-xs md:text-sm">
         <div className="text-gray-500 flex space-x-1 pb-0.5">
           <p>
-            {author} {format(createdAtI * 1000)}
+            {author} {getTimeago(createdAtI * 1000)}
             {parentId ? (
               <>
                 {' '}
