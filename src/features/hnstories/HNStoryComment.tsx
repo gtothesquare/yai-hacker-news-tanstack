@@ -1,6 +1,6 @@
 import { ItemAlgolia } from '~/types';
-import { format } from 'timeago.js';
 import { RouterLink } from '~/components/ui/RouterLink';
+import { getTimeago } from '~/features/hnstories/helpers';
 
 interface Props {
   commentItem: ItemAlgolia;
@@ -13,7 +13,7 @@ export const HNStoryComment = ({ commentItem }: Props) => {
       <div className="flex flex-col text-xs md:text-sm">
         <div className="text-gray-500 flex space-x-1 pt-4 pb-0.5">
           <p>
-            {author} {format(created_at_i * 1000)} |{' '}
+            {author} {getTimeago(created_at_i * 1000)} |{' '}
             {parent_id ? (
               <RouterLink href={`#${parent_id}`}>parent</RouterLink>
             ) : null}
