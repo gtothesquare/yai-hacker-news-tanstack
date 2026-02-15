@@ -1,0 +1,2 @@
+CREATE INDEX "coments_search_idx" ON "comments" USING gin (to_tsvector('english', "text"));--> statement-breakpoint
+CREATE INDEX "stories_search_idx" ON "stories" USING gin (to_tsvector('english', "title" || ' ' || "text"));

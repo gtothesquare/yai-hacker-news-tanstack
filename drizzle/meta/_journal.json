@@ -22,6 +22,13 @@
       "when": 1767566532161,
       "tag": "0002_smart_ben_urich",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1771106641992,
+      "tag": "0003_robust_drax",
+      "breakpoints": true
     }
   ]
 }
