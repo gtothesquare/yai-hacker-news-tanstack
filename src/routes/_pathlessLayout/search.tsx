@@ -5,7 +5,7 @@ import { updateSearchStories } from '~/features/hnstories/server-functions/getSe
 import { getPlace } from '~/features/hnstories/helpers';
 import { LIMIT } from '~/config';
 import { SearchStoryResult } from '~/features/search/SearchStoryResult';
-import { searchStories } from '~/features/search/searchStories';
+import { searchStoriesFn } from '~/features/search/search.functions';
 
 interface QuerySearchParams {
   q: string;
@@ -25,6 +25,7 @@ function getPrevSearchPage(currentPage: number) {
 }
 
 export const Route = createFileRoute('/_pathlessLayout/search')({
+  server: {},
   component: RouteComponent,
   validateSearch: (search: Record<string, unknown>): QuerySearchParams => {
     return {
@@ -34,10 +35,12 @@ export const Route = createFileRoute('/_pathlessLayout/search')({
   },
   loaderDeps: ({ search: { page, q } }) => ({ page, q }),
   loader: async ({ deps: { page, q } }) => {
-    const result = await searchStories({
-      searchTerm: q,
-      page,
-      pageSize: LIMIT,
+    const result = await searchStoriesFn({
+      data: {
+        searchTerm: q,
+        page,
+        pageSize: LIMIT,
+      },
     });
 
     return {

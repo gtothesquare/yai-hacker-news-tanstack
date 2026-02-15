@@ -2,7 +2,7 @@ import { count, getTableColumns, sql } from 'drizzle-orm';
 import { stories } from '~/db/schema';
 import { db } from '~/db';
 
-interface SearchStoriesParams {
+export interface SearchStoriesParams {
   searchTerm: string;
   page: number;
   pageSize: number;
