@@ -49,7 +49,7 @@ export const getSearchComment = (story?: ItemAlgolia) => {
 
 export const getTimeago = (time?: number) => {
   if (time && !isNaN(time)) {
-    return format(time * 1000);
+    return format(time * 1000, 'en_US');
   }
   return '';
 };
