@@ -47,10 +47,10 @@ export const Route = createRootRoute({
     ],
   }),
   component: RootComponent,
-  errorComponent: (props) => {
+  errorComponent: () => {
     return (
       <RootDocument>
-        <DefaultCatchBoundary {...props} />
+        <DefaultCatchBoundary />
       </RootDocument>
     );
   },
