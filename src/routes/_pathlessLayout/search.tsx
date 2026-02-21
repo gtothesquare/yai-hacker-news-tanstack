@@ -44,8 +44,8 @@ export const Route = createFileRoute('/_pathlessLayout/search')({
     });
 
     return {
-      hits: result.hits ?? [],
-      found: result.found,
+      hits: result?.hits ?? [],
+      found: result?.found ?? 0,
     };
   },
 });
