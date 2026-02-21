@@ -7,5 +7,6 @@ import {
 export const searchStoriesFn = createServerFn({ method: 'POST' })
   .inputValidator((data: SearchStoriesParams) => data)
   .handler(async ({ data }) => {
+    //TODO improve error handling here, searchStories eats it.
     return searchStories(data);
   });

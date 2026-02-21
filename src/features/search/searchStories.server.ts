@@ -61,15 +61,20 @@ export const searchStories = async ({
   page,
   pageSize,
 }: SearchStoriesParams) => {
-  // const matchQuery = sql`(
-  // setweight(to_tsvector('english', ${stories.title}), 'A') ||
-  // setweight(to_tsvector('english', ${stories.text}), 'B')), to_tsquery('english', ${searchTerm})`;
+  try {
+    // const matchQuery = sql`(
+    // setweight(to_tsvector('english', ${stories.title}), 'A') ||
+    // setweight(to_tsvector('english', ${stories.text}), 'B')), to_tsquery('english', ${searchTerm})`;
 
-  const query = getSearchStoriesResult({ searchTerm, page, pageSize });
+    const query = getSearchStoriesResult({ searchTerm, page, pageSize });
 
-  const countQuery = getSearchStoriesResultCount(searchTerm);
+    const countQuery = getSearchStoriesResultCount(searchTerm);
 
-  const [result, [countResult]] = await Promise.all([query, countQuery]);
-  const hits = mapSearchDBSearchResultToStoryResult(result);
-  return { hits, found: countResult.count };
+    const [result, [countResult]] = await Promise.all([query, countQuery]);
+    const hits = mapSearchDBSearchResultToStoryResult(result);
+    return { hits, found: countResult.count };
+  } catch (error) {
+    console.error(error);
+    return { error: '500 Internal Server Error' };
+  }
 };
