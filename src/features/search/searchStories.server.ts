@@ -32,7 +32,7 @@ const getSearchStoriesResultCount = (searchTerm: string) => {
       sql`(
        setweight(to_tsvector('english', ${stories.title}), 'A') ||
        setweight(to_tsvector('english', ${stories.text}), 'B'))
-     @@ to_tsquery('english',${searchTerm})`
+     @@ websearch_to_tsquery('english',${searchTerm})`
     );
 };
 
@@ -50,7 +50,7 @@ const getSearchStoriesResult = ({
       sql`(
        setweight(to_tsvector('english', ${stories.title}), 'A') ||
        setweight(to_tsvector('english', ${stories.text}), 'B'))
-     @@ to_tsquery('english',${searchTerm})`
+     @@ websearch_to_tsquery('english',${searchTerm})`
     )
     .limit(pageSize)
     .offset((page - 1) * pageSize);
@@ -62,13 +62,16 @@ export const searchStories = async ({
   pageSize,
 }: SearchStoriesParams) => {
   try {
-    // const matchQuery = sql`(
-    // setweight(to_tsvector('english', ${stories.title}), 'A') ||
-    // setweight(to_tsvector('english', ${stories.text}), 'B')), to_tsquery('english', ${searchTerm})`;
+    // Join words with OR so any single word matching yields results
+    const orSearchTerm = searchTerm.trim().split(/\s+/).join(' or ');
 
-    const query = getSearchStoriesResult({ searchTerm, page, pageSize });
+    const query = getSearchStoriesResult({
+      searchTerm: orSearchTerm,
+      page,
+      pageSize,
+    });
 
-    const countQuery = getSearchStoriesResultCount(searchTerm);
+    const countQuery = getSearchStoriesResultCount(orSearchTerm);
 
     const [result, [countResult]] = await Promise.all([query, countQuery]);
     const hits = mapSearchDBSearchResultToStoryResult(result);

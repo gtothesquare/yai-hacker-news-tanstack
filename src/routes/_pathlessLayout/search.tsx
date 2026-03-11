@@ -63,6 +63,11 @@ function RouteComponent() {
           encType="multipart/form-data"
         />
       </div>
+      {q && hits.length === 0 && (
+        <p className="p-2 text-sm text-neutral-500">
+          No results found for "{q}"
+        </p>
+      )}
       {hits.map((item, i) => {
         const place = getPlace(page, LIMIT, i);
 
