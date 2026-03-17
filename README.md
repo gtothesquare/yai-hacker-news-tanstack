@@ -24,3 +24,5 @@ then http://localhost:3000/api/inngest
 
 `docker build -t yai-news-dev .`
 `docker run --rm yai-news-dev
+
+psql -U postgres -h localhost -U postgres -d yaipnews -f backup_clean.sql

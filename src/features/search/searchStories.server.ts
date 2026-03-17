@@ -22,18 +22,29 @@ const mapSearchDBSearchResultToStoryResult = (result: DBSearchResult) => {
   });
 };
 
+const searchVector = sql`
+    setweight(to_tsvector('english', ${stories.title}), 'A')
+`;
+
+const getSearchMatch = (searchTerm: string) =>
+  sql`(
+      setweight(to_tsvector('english', ${stories.title}), 'A')
+    ) @@ websearch_to_tsquery('english', ${searchTerm})`;
+
+const getSearchQuery = (searchTerm: string) => {
+  return sql`websearch_to_tsquery('english', ${searchTerm})`;
+};
+
+const getSearchRank = (searchTerm: string) =>
+  sql<number>`ts_rank(${searchVector}, ${getSearchQuery(searchTerm)})`;
+
 const getSearchStoriesResultCount = (searchTerm: string) => {
   return db
     .select({
       count: count(),
     })
     .from(stories)
-    .where(
-      sql`(
-       setweight(to_tsvector('english', ${stories.title}), 'A') ||
-       setweight(to_tsvector('english', ${stories.text}), 'B'))
-     @@ websearch_to_tsquery('english',${searchTerm})`
-    );
+    .where(getSearchMatch(searchTerm));
 };
 
 const getSearchStoriesResult = ({
@@ -44,14 +55,11 @@ const getSearchStoriesResult = ({
   return db
     .select({
       ...getTableColumns(stories),
+      rank: getSearchRank(searchTerm).as('rank'),
     })
     .from(stories)
-    .where(
-      sql`(
-       setweight(to_tsvector('english', ${stories.title}), 'A') ||
-       setweight(to_tsvector('english', ${stories.text}), 'B'))
-     @@ websearch_to_tsquery('english',${searchTerm})`
-    )
+    .where(getSearchMatch(searchTerm))
+    .orderBy(sql`${getSearchRank(searchTerm)} DESC`, sql`${stories.time} DESC`)
     .limit(pageSize)
     .offset((page - 1) * pageSize);
 };
@@ -62,16 +70,13 @@ export const searchStories = async ({
   pageSize,
 }: SearchStoriesParams) => {
   try {
-    // Join words with OR so any single word matching yields results
-    const orSearchTerm = searchTerm.trim().split(/\s+/).join(' or ');
-
     const query = getSearchStoriesResult({
-      searchTerm: orSearchTerm,
+      searchTerm,
       page,
       pageSize,
     });
 
-    const countQuery = getSearchStoriesResultCount(orSearchTerm);
+    const countQuery = getSearchStoriesResultCount(searchTerm);
 
     const [result, [countResult]] = await Promise.all([query, countQuery]);
     const hits = mapSearchDBSearchResultToStoryResult(result);
