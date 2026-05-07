@@ -1,9 +1,6 @@
 import { inngest } from '../../client';
 import { fetchTopStoriesWithComments } from '~/features/hnstories/api';
-import {
-  saveTopStoriesEvent,
-  syncTypesenseCollectionsEvent,
-} from '~/inngest/type';
+import { saveTopStoriesEvent } from '~/inngest/type';
 import { flattenComments } from '~/inngest/workflows/syncTopStories/helpers';
 import {
   upsertComment,
@@ -32,8 +29,6 @@ export const saveTopStories = inngest.createFunction(
         }
       }
     });
-
-    await inngest.send(syncTypesenseCollectionsEvent.create());
   }
 );
 
@@ -59,7 +54,5 @@ export const saveTopStoriesCron = inngest.createFunction(
         }
       }
     });
-
-    await inngest.send(syncTypesenseCollectionsEvent.create());
   }
 );
