@@ -1,5 +1,9 @@
 import { inngest } from '../../client';
 import { fetchTopStoriesWithComments } from '~/features/hnstories/api';
+import {
+  saveTopStoriesEvent,
+  syncTypesenseCollectionsEvent,
+} from '~/inngest/type';
 import { flattenComments } from '~/inngest/workflows/syncTopStories/helpers';
 import {
   upsertComment,
@@ -9,8 +13,8 @@ import {
 export const saveTopStories = inngest.createFunction(
   {
     id: 'save-top-stories-event',
+    triggers: [saveTopStoriesEvent],
   },
-  { event: 'stories/save.top.stories' },
   async ({ step }) => {
     await step.run('sync-top-stories', async () => {
       const topStories = await fetchTopStoriesWithComments(1, 400);
@@ -29,15 +33,15 @@ export const saveTopStories = inngest.createFunction(
       }
     });
 
-    await inngest.send({ name: 'typesense/sync-collections', data: {} });
+    await inngest.send(syncTypesenseCollectionsEvent.create());
   }
 );
 
 export const saveTopStoriesCron = inngest.createFunction(
   {
     id: 'save-top-stories-every-30-minutes',
+    triggers: [{ cron: '*/30 * * * *' }],
   },
-  { cron: '*/30 * * * *' },
   async ({ step }) => {
     await step.run('sync-top-stories', async () => {
       const topStories = await fetchTopStoriesWithComments(1, 400);
@@ -56,6 +60,6 @@ export const saveTopStoriesCron = inngest.createFunction(
       }
     });
 
-    await inngest.send({ name: 'typesense/sync-collections', data: {} });
+    await inngest.send(syncTypesenseCollectionsEvent.create());
   }
 );
