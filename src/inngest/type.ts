@@ -1,19 +1,11 @@
-import { EventSchemas } from 'inngest';
+import { eventType } from 'inngest';
 
-type SaveTopStoriesEvent = {
-  name: 'stories/save.top.stories';
-};
+export const saveTopStoriesEvent = eventType('stories/save.top.stories');
 
-type InitializeTypesenseCollectionsEvent = {
-  name: 'typesense/init-collections';
-};
+export const initTypesenseCollectionsEvent = eventType(
+  'typesense/init-collections'
+);
 
-type SyncCollectionsEvent = {
-  name: 'typesense/sync-collections';
-};
-
-export const schemas = new EventSchemas().fromUnion<
-  | SaveTopStoriesEvent
-  | InitializeTypesenseCollectionsEvent
-  | SyncCollectionsEvent
->();
+export const syncTypesenseCollectionsEvent = eventType(
+  'typesense/sync-collections'
+);

@@ -1,4 +1,8 @@
 import { inngest } from '~/inngest/client';
+import {
+  initTypesenseCollectionsEvent,
+  syncTypesenseCollectionsEvent,
+} from '~/inngest/type';
 import { initializeAllCollections } from '~/lib/typesense/collections';
 import { batchSyncDocuments } from '~/lib/typesense/sync';
 import {
@@ -12,9 +16,7 @@ import { getLastSync } from '~/inngest/workflows/typesense/helpers';
 export const initTypesenseCollections = inngest.createFunction(
   {
     id: 'typesense-init-collections',
-  },
-  {
-    event: 'typesense/init-collections',
+    triggers: [initTypesenseCollectionsEvent],
   },
   async ({ step }) => {
     await step.run('init-collections', async () => {
@@ -26,9 +28,7 @@ export const initTypesenseCollections = inngest.createFunction(
 export const syncTypesenseStoriesDocuments = inngest.createFunction(
   {
     id: 'typesense-sync-top-stories',
-  },
-  {
-    event: 'typesense/sync-collections',
+    triggers: [syncTypesenseCollectionsEvent],
   },
   async ({ step }) => {
     const result = await step.run('sync-top-stories', async () => {
@@ -62,9 +62,7 @@ export const syncTypesenseStoriesDocuments = inngest.createFunction(
 export const syncTypesenseCommentsDocuments = inngest.createFunction(
   {
     id: 'typesense-sync-comments',
-  },
-  {
-    event: 'typesense/sync-collections',
+    triggers: [syncTypesenseCollectionsEvent],
   },
   async ({ step }) => {
     const result = await step.run('sync-comments', async () => {
