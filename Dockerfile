@@ -24,7 +24,6 @@ RUN pnpm build
 FROM node:24-slim AS runner
 # Install curl for healthchecks (Debian-based)
 RUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/*
-RUN npm install -g pnpm@11.0.8
 
 WORKDIR /app
 
@@ -59,4 +58,4 @@ ENV HACKER_NEWS_API=${HACKER_NEWS_API}
 EXPOSE 3000
 USER nodejs
 
-CMD ["sh", "-c", "pnpm run db:migrate && exec pnpm run start"]
+CMD ["sh", "-c", "./node_modules/.bin/drizzle-kit migrate && exec node .output/server/index.mjs"]
