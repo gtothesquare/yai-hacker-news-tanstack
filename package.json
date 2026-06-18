@@ -2,7 +2,7 @@
   "name": "yai-hacker-news-tanstack",
   "version": "1.0.0",
   "description": "yet another anther hacker news clone, this time tan stack",
-  "packageManager": "pnpm@11.0.8",
+  "packageManager": "pnpm@11.5.2",
   "scripts": {
     "dev": "vite dev",
     "build": "vite build && tsc --noEmit",
