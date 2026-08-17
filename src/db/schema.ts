@@ -1,12 +1,5 @@
-import {
-  index,
-  integer,
-  pgTable,
-  serial,
-  text,
-  timestamp,
-} from 'drizzle-orm/pg-core';
-import { InferSelectModel, InferInsertModel, sql } from 'drizzle-orm';
+import { index, integer, pgTable, text, timestamp } from 'drizzle-orm/pg-core';
+import { InferSelectModel, sql } from 'drizzle-orm';
 import { ItemType } from '~/types';
 
 export const stories = pgTable(
@@ -68,20 +61,3 @@ export const comments = pgTable(
 );
 
 export type Comment = InferSelectModel<typeof comments>;
-
-export const typesenseSync = pgTable('typesense_sync', {
-  id: serial('id').primaryKey(),
-  collectionName: text('collection_name').notNull(),
-  lastSyncedAt: timestamp('last_synced_at', { withTimezone: true })
-    .notNull()
-    .defaultNow(),
-  status: text('status', {
-    enum: ['syncing', 'completed', 'failed'],
-  })
-    .notNull()
-    .default('syncing'),
-  createdAt: timestamp('created_at').defaultNow().notNull(),
-});
-
-export type TypesenseSync = InferSelectModel<typeof typesenseSync>;
-export type NewTypesenseSync = InferInsertModel<typeof typesenseSync>;

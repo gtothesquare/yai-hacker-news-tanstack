@@ -9,21 +9,21 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as HealthRouteImport } from './routes/health'
 import { Route as PathlessLayoutRouteRouteImport } from './routes/_pathlessLayout/route'
+import { Route as HealthRouteImport } from './routes/health'
 import { Route as PathlessLayoutIndexRouteImport } from './routes/_pathlessLayout/index'
-import { Route as ApiInngestRouteImport } from './routes/api/inngest'
-import { Route as PathlessLayoutSearchRouteImport } from './routes/_pathlessLayout/search'
 import { Route as PathlessLayoutPageRouteImport } from './routes/_pathlessLayout/$page'
+import { Route as PathlessLayoutSearchRouteImport } from './routes/_pathlessLayout/search'
+import { Route as ApiInngestRouteImport } from './routes/api/inngest'
 import { Route as PathlessLayoutItemIdRouteImport } from './routes/_pathlessLayout/item/$id'
 
+const PathlessLayoutRouteRoute = PathlessLayoutRouteRouteImport.update({
+  id: '/_pathlessLayout',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const HealthRoute = HealthRouteImport.update({
   id: '/health',
   path: '/health',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const PathlessLayoutRouteRoute = PathlessLayoutRouteRouteImport.update({
-  id: '/_pathlessLayout',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PathlessLayoutIndexRoute = PathlessLayoutIndexRouteImport.update({
@@ -31,20 +31,20 @@ const PathlessLayoutIndexRoute = PathlessLayoutIndexRouteImport.update({
   path: '/',
   getParentRoute: () => PathlessLayoutRouteRoute,
 } as any)
-const ApiInngestRoute = ApiInngestRouteImport.update({
-  id: '/api/inngest',
-  path: '/api/inngest',
-  getParentRoute: () => rootRouteImport,
+const PathlessLayoutPageRoute = PathlessLayoutPageRouteImport.update({
+  id: '/$page',
+  path: '/$page',
+  getParentRoute: () => PathlessLayoutRouteRoute,
 } as any)
 const PathlessLayoutSearchRoute = PathlessLayoutSearchRouteImport.update({
   id: '/search',
   path: '/search',
   getParentRoute: () => PathlessLayoutRouteRoute,
 } as any)
-const PathlessLayoutPageRoute = PathlessLayoutPageRouteImport.update({
-  id: '/$page',
-  path: '/$page',
-  getParentRoute: () => PathlessLayoutRouteRoute,
+const ApiInngestRoute = ApiInngestRouteImport.update({
+  id: '/api/inngest',
+  path: '/api/inngest',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const PathlessLayoutItemIdRoute = PathlessLayoutItemIdRouteImport.update({
   id: '/item/$id',
@@ -81,12 +81,7 @@ export interface FileRoutesById {
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    | '/'
-    | '/health'
-    | '/$page'
-    | '/search'
-    | '/api/inngest'
-    | '/item/$id'
+    '/' | '/health' | '/$page' | '/search' | '/api/inngest' | '/item/$id'
   fileRoutesByTo: FileRoutesByTo
   to: '/health' | '/$page' | '/search' | '/api/inngest' | '/' | '/item/$id'
   id:
@@ -108,18 +103,18 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/health': {
-      id: '/health'
-      path: '/health'
-      fullPath: '/health'
-      preLoaderRoute: typeof HealthRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/_pathlessLayout': {
       id: '/_pathlessLayout'
       path: ''
       fullPath: '/'
       preLoaderRoute: typeof PathlessLayoutRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/health': {
+      id: '/health'
+      path: '/health'
+      fullPath: '/health'
+      preLoaderRoute: typeof HealthRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_pathlessLayout/': {
@@ -129,12 +124,12 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PathlessLayoutIndexRouteImport
       parentRoute: typeof PathlessLayoutRouteRoute
     }
-    '/api/inngest': {
-      id: '/api/inngest'
-      path: '/api/inngest'
-      fullPath: '/api/inngest'
-      preLoaderRoute: typeof ApiInngestRouteImport
-      parentRoute: typeof rootRouteImport
+    '/_pathlessLayout/$page': {
+      id: '/_pathlessLayout/$page'
+      path: '/$page'
+      fullPath: '/$page'
+      preLoaderRoute: typeof PathlessLayoutPageRouteImport
+      parentRoute: typeof PathlessLayoutRouteRoute
     }
     '/_pathlessLayout/search': {
       id: '/_pathlessLayout/search'
@@ -143,12 +138,12 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PathlessLayoutSearchRouteImport
       parentRoute: typeof PathlessLayoutRouteRoute
     }
-    '/_pathlessLayout/$page': {
-      id: '/_pathlessLayout/$page'
-      path: '/$page'
-      fullPath: '/$page'
-      preLoaderRoute: typeof PathlessLayoutPageRouteImport
-      parentRoute: typeof PathlessLayoutRouteRoute
+    '/api/inngest': {
+      id: '/api/inngest'
+      path: '/api/inngest'
+      fullPath: '/api/inngest'
+      preLoaderRoute: typeof ApiInngestRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/_pathlessLayout/item/$id': {
       id: '/_pathlessLayout/item/$id'
