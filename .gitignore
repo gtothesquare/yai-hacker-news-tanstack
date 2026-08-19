@@ -24,3 +24,4 @@ yarn.lock
 
 .nitro
 .tanstack
+.pnpm-store

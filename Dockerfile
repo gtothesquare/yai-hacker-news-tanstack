@@ -1,13 +1,14 @@
 # Base image with pnpm installed
-FROM node:24-slim AS base
+FROM node:26.7.0-slim AS base
 WORKDIR /app
-RUN npm install -g pnpm@11.0.8
+COPY package.json ./
+RUN npm install --global "$(node -p "require('./package.json').packageManager")"
 
 # ----------------------
 # 1. Install dependencies
 # ----------------------
 FROM base AS deps
-COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY pnpm-lock.yaml pnpm-workspace.yaml ./
 RUN pnpm install --frozen-lockfile
 
 # ----------------------
@@ -21,17 +22,11 @@ RUN pnpm build
 # ----------------------
 # 3. Production runner
 # ----------------------
-FROM node:24-slim AS runner
-# Install curl for healthchecks (Debian-based)
-RUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/*
+FROM node:26.7.0-slim AS runner
 
 WORKDIR /app
 
 ENV NODE_ENV=production
-
-# Create a non-root user
-RUN addgroup --system --gid 1001 nodejs && \
-    adduser --system --uid 1001 nodejs
 
 # Copy only the build output
 COPY --from=builder /app/node_modules ./node_modules
@@ -39,10 +34,15 @@ COPY --from=builder /app/package.json ./package.json
 COPY --from=builder /app/.output ./.output
 COPY --from=builder /app/drizzle ./drizzle
 COPY --from=builder /app/drizzle.config.ts ./drizzle.config.ts
+COPY --from=builder /app/scripts/migrate.mjs ./scripts/migrate.mjs
+COPY --from=builder /app/entrypoint.sh ./entrypoint.sh
 
-# Writable directory for runtime data
-RUN mkdir -p /app/data && \
-    chown -R nodejs:nodejs /app
+#official node:26.7.0-slim image already includes:
+ #
+ #  uid=1000(node) gid=1000(node)
+USER node
+HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
+CMD ["node", "-e", "const p=process.env.NITRO_PORT??process.env.PORT??3000;fetch(`http://127.0.0.1:${p}/health`).then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
 
 # ----------------------
 # Pass build-time vars to runtime
@@ -56,6 +56,5 @@ ENV HACKER_NEWS_API=${HACKER_NEWS_API}
 # Expose and run
 # ----------------------
 EXPOSE 3000
-USER nodejs
-
-CMD ["sh", "-c", "./node_modules/.bin/drizzle-kit migrate && exec node .output/server/index.mjs"]
+ENTRYPOINT ["./entrypoint.sh"]
+CMD ["node", ".output/server/index.mjs"]
