@@ -11,7 +11,11 @@
     "start": "node .output/server/index.mjs",
     "prepare": "husky",
     "db:generate": "drizzle-kit generate",
-    "db:migrate": "drizzle-kit migrate"
+    "db:migrate": "drizzle-kit migrate",
+    "dev:infra": "docker compose up -d",
+    "dev:infra:stop": "docker compose down",
+    "dev:infra:reset": "docker compose down -v && docker compose up -d",
+    "dev:infra:logs": "docker compose logs -f"
   },
   "type": "module",
   "keywords": [],

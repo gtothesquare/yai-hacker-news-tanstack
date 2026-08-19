@@ -34,6 +34,8 @@ COPY --from=builder /app/package.json ./package.json
 COPY --from=builder /app/.output ./.output
 COPY --from=builder /app/drizzle ./drizzle
 COPY --from=builder /app/drizzle.config.ts ./drizzle.config.ts
+COPY --from=builder /app/scripts/migrate.mjs ./scripts/migrate.mjs
+COPY --from=builder /app/entrypoint.sh ./entrypoint.sh
 
 #official node:26.7.0-slim image already includes:
  #
@@ -54,4 +56,5 @@ ENV HACKER_NEWS_API=${HACKER_NEWS_API}
 # Expose and run
 # ----------------------
 EXPOSE 3000
+ENTRYPOINT ["./entrypoint.sh"]
 CMD ["node", ".output/server/index.mjs"]

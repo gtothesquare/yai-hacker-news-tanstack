@@ -20,28 +20,28 @@ then http://localhost:3000/api/inngest
 
 ## Docker
 
-Build the image:
+Start the application and its local PostgreSQL database:
 
 ```sh
-docker build -t news-yai-app .
+docker compose up --build
 ```
 
-Run database migrations once as a deployment step, before starting or replacing
-the application containers:
+The app waits for PostgreSQL 18, applies pending migrations, and starts on port
+`3000`. The database is published locally on port `5434` and its data is stored in the
+`postgres_data` Docker volume.
+
+The local ports and database credentials can be overridden when needed:
 
 ```sh
-docker compose run --rm app ./node_modules/.bin/drizzle-kit migrate
+PORT=3001 POSTGRES_PORT=55432 POSTGRES_DB=yaipnews \
+  POSTGRES_USER=postgres POSTGRES_PASSWORD=postgres docker compose up --build
 ```
 
-Start the application:
+Stop the local services while retaining the database data:
 
 ```sh
-docker compose up -d app
+docker compose down
 ```
-
-The application container does not run migrations during startup. This avoids
-multiple replicas attempting the same migration and allows application restarts
-without requiring database schema changes.
 
 To restore a local database backup manually:
 
