@@ -1,4 +1,11 @@
-import { index, integer, pgTable, text, timestamp } from 'drizzle-orm/pg-core';
+import {
+  index,
+  integer,
+  pgTable,
+  serial,
+  text,
+  timestamp,
+} from 'drizzle-orm/pg-core';
 import { InferSelectModel, sql } from 'drizzle-orm';
 import { ItemType } from '~/types';
 
@@ -22,15 +29,24 @@ export const stories = pgTable(
   },
   (table) => {
     return {
+      // FTS exact matching
       storiesSearchIdx: index('stories_search_idx').using(
         'gin',
         sql`to_tsvector('english', ${table.title} || ' ' || ${table.text})`
       ),
+      // Trigram for fuzzy/prefix on title and text
+      storiesTitleTrgmIdx: index('stories_title_trgm_idx').using(
+        'gin',
+        sql`${table.title} gin_trgm_ops`
+      ),
+
+      storiesTextTrgmIdx: index('stories_text_trgm_idx').using(
+        'gin',
+        sql`${table.text} gin_trgm_ops`
+      ),
     };
   }
 );
-
-export type Story = InferSelectModel<typeof stories>;
 
 export const comments = pgTable(
   'comments',
@@ -60,4 +76,19 @@ export const comments = pgTable(
   }
 );
 
+export const typesenseSync = pgTable('typesense_sync', {
+  id: serial('id').primaryKey(),
+  collectionName: text('collection_name').notNull(),
+  lastSyncedAt: timestamp('last_synced_at', { withTimezone: true })
+    .notNull()
+    .defaultNow(),
+  status: text('status', {
+    enum: ['syncing', 'completed', 'failed'],
+  })
+    .notNull()
+    .default('syncing'),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+});
+
+export type Story = InferSelectModel<typeof stories>;
 export type Comment = InferSelectModel<typeof comments>;

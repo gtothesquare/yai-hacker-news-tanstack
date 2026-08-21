@@ -1,8 +1,7 @@
-import { Await, createFileRoute } from '@tanstack/react-router';
-import { getComments } from '~/features/hnstories/server-functions/getComments';
+import { createFileRoute } from '@tanstack/react-router';
+import { getComments } from '~/features/hnstories/server-functions/getComments.functions';
 import { HNStoryComments } from '~/features/hnstories/HNStoryComments';
 import { LoadingIndicator } from '~/components/ui/LoadingIndicator';
-import { Suspense } from 'react';
 import { z } from 'zod';
 
 export const Route = createFileRoute('/_pathlessLayout/item/$id')({
@@ -14,24 +13,17 @@ export const Route = createFileRoute('/_pathlessLayout/item/$id')({
       id: String(params.id),
     }),
   },
+  pendingComponent: LoadingIndicator,
   component: RouteComponent,
-  loader: async ({ params: { id } }) => {
-    return { deferredComments: getComments({ data: id }) };
-  },
+  loader: ({ params: { id } }) => getComments({ data: id }),
 });
 
 function RouteComponent() {
-  const { deferredComments } = Route.useLoaderData();
+  const commentData = Route.useLoaderData();
   return (
-    <Suspense fallback={<LoadingIndicator />}>
-      <Await promise={deferredComments}>
-        {(commentData) => (
-          <HNStoryComments
-            rootItem={commentData.item}
-            itemChildren={commentData.itemChildren}
-          />
-        )}
-      </Await>
-    </Suspense>
+    <HNStoryComments
+      rootItem={commentData.item}
+      itemChildren={commentData.itemChildren}
+    />
   );
 }

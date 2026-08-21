@@ -6,13 +6,11 @@ import { RouterLink } from '~/components/ui/RouterLink';
 
 interface Props {
   story: SearchStoryItem;
-  place: number;
 }
 
-export const SearchStoryResult = ({ story, place }: Props) => {
+export const SearchStoryResult = ({ story }: Props) => {
   return (
     <div className="flex space-x-2 font-light">
-      <div className="text-gray-500">{place}.</div>
       <div>
         <div className="flex space-x-2">
           <Link href={getStoryUrl(story)}>{story?.title}</Link>

@@ -1,9 +1,9 @@
 services:
-  db:
+  yaip-news-postgres-db:
     image: postgres:18-alpine
     restart: unless-stopped
     environment:
-      POSTGRES_DB: ${POSTGRES_DB:-yaipnews}
+      POSTGRES_DB: ${POSTGRES_DB:-yaip_news_db}
       POSTGRES_USER: ${POSTGRES_USER:-postgres}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
     ports:
@@ -16,21 +16,5 @@ services:
       timeout: 3s
       retries: 10
       start_period: 5s
-
-  app:
-    build:
-      context: .
-    image: news-yai-app
-    depends_on:
-      db:
-        condition: service_healthy
-    ports:
-      - '${PORT:-3000}:${PORT:-3000}'
-    env_file:
-      - .env
-    environment:
-      DATABASE_URL: postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@db:5432/${POSTGRES_DB:-yaipnews}
-      PORT: ${PORT:-3000}
-
 volumes:
   postgres_data:
