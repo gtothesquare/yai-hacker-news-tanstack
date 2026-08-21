@@ -1,7 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router';
 import { RouterLink } from '~/components/ui/RouterLink';
 import { SearchInput } from '~/components/ui/SearchInput';
-import { updateSearchStories } from '~/features/hnstories/server-functions/getSearchStories';
+import { updateSearchStories } from '~/features/hnstories/server-functions/getSearchStories.functions';
 import { LIMIT } from '~/config';
 import { SearchStoryResult } from '~/features/search/SearchStoryResult';
 import { searchStoriesFn } from '~/features/search/search.functions';

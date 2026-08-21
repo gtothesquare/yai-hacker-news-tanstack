@@ -1,5 +1,5 @@
 import { Await, createFileRoute } from '@tanstack/react-router';
-import { getComments } from '~/features/hnstories/server-functions/getComments';
+import { getComments } from '~/features/hnstories/server-functions/getComments.functions';
 import { HNStoryComments } from '~/features/hnstories/HNStoryComments';
 import { LoadingIndicator } from '~/components/ui/LoadingIndicator';
 import { Suspense } from 'react';

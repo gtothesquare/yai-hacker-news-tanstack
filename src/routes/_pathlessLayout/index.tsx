@@ -1,7 +1,7 @@
 import { Await, createFileRoute } from '@tanstack/react-router';
 import { HNStories } from '~/features/hnstories/HNStories';
 import { LIMIT } from '~/config';
-import { getTopStories } from '~/features/hnstories/server-functions/getTopStories';
+import { getTopStories } from '~/features/hnstories/server-functions/getTopStories.functions';
 import { Suspense } from 'react';
 import { StoriesSkeleton } from '~/features/hnstories/StoriesSkeleton';
 

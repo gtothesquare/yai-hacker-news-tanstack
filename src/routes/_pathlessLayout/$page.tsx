@@ -2,7 +2,7 @@ import { Await, createFileRoute } from '@tanstack/react-router';
 import { LIMIT } from '~/config';
 import { pageStrToNumber } from '~/lib/utils/pageStrToNumber';
 import { HNStories } from '~/features/hnstories/HNStories';
-import { getTopStories } from '~/features/hnstories/server-functions/getTopStories';
+import { getTopStories } from '~/features/hnstories/server-functions/getTopStories.functions';
 import { Suspense } from 'react';
 import { StoriesSkeleton } from '~/features/hnstories/StoriesSkeleton';
 
