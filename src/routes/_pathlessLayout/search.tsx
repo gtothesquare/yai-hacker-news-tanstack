@@ -2,57 +2,44 @@ import { createFileRoute } from '@tanstack/react-router';
 import { RouterLink } from '~/components/ui/RouterLink';
 import { SearchInput } from '~/components/ui/SearchInput';
 import { updateSearchStories } from '~/features/hnstories/server-functions/getSearchStories';
-import { getPlace } from '~/features/hnstories/helpers';
 import { LIMIT } from '~/config';
 import { SearchStoryResult } from '~/features/search/SearchStoryResult';
 import { searchStoriesFn } from '~/features/search/search.functions';
 
 interface QuerySearchParams {
   q: string;
-  page: number;
-}
-
-function getNextSearchPage(currentPage: number) {
-  return currentPage + 1;
-}
-
-function getPrevSearchPage(currentPage: number) {
-  if (currentPage <= 1) {
-    return 1;
-  }
-
-  return currentPage - 1;
+  cursor?: string;
 }
 
 export const Route = createFileRoute('/_pathlessLayout/search')({
   server: {},
   component: RouteComponent,
-  validateSearch: (search: Record<string, unknown>): QuerySearchParams => {
+  validateSearch: (search): QuerySearchParams => {
     return {
       q: (search.q as string) ?? '',
-      page: Number(search?.page ?? 1),
+      cursor: (search.cursor as string) ?? undefined,
     };
   },
-  loaderDeps: ({ search: { page, q } }) => ({ page, q }),
-  loader: async ({ deps: { page, q } }) => {
+  loaderDeps: ({ search: { cursor, q } }) => ({ cursor, q }),
+  loader: async ({ deps: { cursor, q } }) => {
     const result = await searchStoriesFn({
       data: {
         searchTerm: q,
-        page,
+        cursor,
         pageSize: LIMIT,
       },
     });
 
     return {
       hits: result?.hits ?? [],
-      found: result?.found ?? 0,
+      nextCursor: result?.nextCursor,
     };
   },
 });
 
 function RouteComponent() {
-  const { page, q } = Route.useSearch();
-  const { hits, found } = Route.useLoaderData();
+  const { q } = Route.useSearch();
+  const { hits, nextCursor } = Route.useLoaderData();
   return (
     <div className="space-y-2">
       <div className="max-w-3xl">
@@ -68,30 +55,17 @@ function RouteComponent() {
           No results found for "{q}"
         </p>
       )}
-      {hits.map((item, i) => {
-        const place = getPlace(page, LIMIT, i);
-
-        return <SearchStoryResult key={item.id} story={item} place={place} />;
+      {hits.map((item) => {
+        return <SearchStoryResult key={item.id} story={item} />;
       })}
       {hits.length > 0 && (
         <div className="flex w-full p-2 space-x-6 justify-center">
-          {page > 1 && (
+          {nextCursor && (
             <RouterLink
               to={`/search`}
               search={{
                 q,
-                page: getPrevSearchPage(page),
-              }}
-            >
-              {'<<'} Prev
-            </RouterLink>
-          )}
-          {found > LIMIT && (
-            <RouterLink
-              to={`/search`}
-              search={{
-                q,
-                page: getNextSearchPage(page),
+                cursor: nextCursor,
               }}
             >
               Next {'>>'}
