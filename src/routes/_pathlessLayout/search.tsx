@@ -68,7 +68,7 @@ function RouteComponent() {
                 cursor: nextCursor,
               }}
             >
-              Next {'>>'}
+              More
             </RouterLink>
           )}
         </div>
