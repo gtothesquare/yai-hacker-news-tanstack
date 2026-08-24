@@ -4,6 +4,17 @@ interface ApiClientOptions<TBody = unknown> {
   headers?: Record<string, string>;
 }
 
+export class ApiError extends Error {
+  constructor(
+    public readonly status: number,
+    public readonly url: string,
+    public readonly responseBody: string
+  ) {
+    super(`HTTP ${status}: ${responseBody}`);
+    this.name = 'ApiError';
+  }
+}
+
 function isPlainObject(value: unknown): value is Record<string, unknown> {
   return (
     typeof value === 'object' && value !== null && value.constructor === Object
@@ -34,13 +45,17 @@ export async function apiClient<TResponse = unknown, TBody = unknown>(
 
     if (!response.ok) {
       const text = await response.text();
-      throw new Error(`HTTP ${response.status}: ${text}`);
+      throw new ApiError(response.status, url, text);
     }
 
     const data = await response.json();
     return data as TResponse;
   } catch (error) {
-    console.error('API Client Error:', error);
+    if (!(error instanceof ApiError && error.status === 404)) {
+      console.error('API Client Error:', url);
+      console.error('Error stack', error);
+    }
+
     throw error;
   }
 }
