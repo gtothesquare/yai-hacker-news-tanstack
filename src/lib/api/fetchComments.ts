@@ -1,4 +1,4 @@
-import { Item, ItemComment } from '~/types';
+import { Item, ItemAlgolia, ItemComment } from '~/types';
 import { fetchData } from './fetchData';
 
 export const fetchComments = async (
@@ -18,4 +18,40 @@ export const fetchComments = async (
       };
     })
   );
+};
+
+export const transformFirebaseComment = (
+  comment: ItemComment,
+  storyId: number
+): ItemAlgolia => {
+  const children = comment.comments.map((child) =>
+    transformFirebaseComment(child, storyId)
+  );
+
+  return {
+    id: comment.id,
+    created_at: new Date(comment.time * 1000).toISOString(),
+    created_at_i: comment.time,
+    type: 'comment',
+    title: '',
+    url: '',
+    text: comment.text,
+    points: 0,
+    author: comment.by,
+    parent_id: comment.parent,
+    story_id: storyId,
+    children,
+    num_comments: children.reduce(
+      (total, child) => total + child.num_comments + 1,
+      0
+    ),
+  };
+};
+
+export const fetchCommentKids = async (
+  commentsIds: number[],
+  storyId: number
+): Promise<ItemAlgolia[]> => {
+  const comments = await fetchComments(commentsIds);
+  return comments.map((comment) => transformFirebaseComment(comment, storyId));
 };

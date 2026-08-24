@@ -1,6 +1,8 @@
 import { fetchData } from '~/lib/api/fetchData';
 import { Item, ItemAlgolia, SearchResult, SearchStories } from '~/types';
 import { fetchAlgoliaData } from '~/lib/api/fetchAlgoliaData';
+import { ApiError } from '~/lib/api/apiClient';
+import { fetchCommentKids } from '~/lib/api/fetchComments';
 
 function fulfilled<T>(
   r: PromiseSettledResult<T>
@@ -10,12 +12,24 @@ function fulfilled<T>(
 
 export const fetchCommentData = async (itemId: number) => {
   const item = await fetchData<Item>(`/item/${itemId}`);
-  const itemAlgolia = await fetchAlgoliaData<ItemAlgolia>(`/items/${itemId}`);
 
-  return {
-    item,
-    itemChildren: itemAlgolia.children,
-  };
+  try {
+    const itemAlgolia = await fetchAlgoliaData<ItemAlgolia>(`/items/${itemId}`);
+
+    return {
+      item,
+      itemChildren: itemAlgolia.children,
+    };
+  } catch (error) {
+    if (!(error instanceof ApiError) || error.status !== 404) {
+      throw error;
+    }
+
+    return {
+      item,
+      itemChildren: await fetchCommentKids(item.kids ?? [], item.id),
+    };
+  }
 };
 
 export const fetchTopStoriesWithComments = async (
