@@ -2,16 +2,16 @@ name: Checks
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
   checks:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        task: [lint, typecheck] # two tasks to run in parallel
+        task: [lint, format:check, typecheck]
     steps:
       - name: Checkout
         uses: actions/checkout@v4
