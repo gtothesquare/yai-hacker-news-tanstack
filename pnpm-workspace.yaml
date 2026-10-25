@@ -1,3 +1,8 @@
 allowBuilds:
   esbuild: true
   protobufjs: true
+
+# Patch the legacy Drizzle loader and keep Inngest telemetry peers compatible.
+overrides:
+  '@esbuild-kit/core-utils>esbuild': 0.28.2
+  '@opentelemetry/api': 1.9.1

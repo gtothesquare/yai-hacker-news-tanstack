@@ -1,8 +1,8 @@
 # Base image with pnpm installed
-FROM node:26.7.0-slim AS base
+FROM node:current-slim AS base
 WORKDIR /app
 COPY package.json ./
-RUN npm install --global "$(node -p "require('./package.json').packageManager")"
+RUN npm install --global npm@latest pnpm@latest
 
 # ----------------------
 # 1. Install dependencies
@@ -22,7 +22,7 @@ RUN pnpm build
 # ----------------------
 # 3. Production runner
 # ----------------------
-FROM node:26.7.0-slim AS runner
+FROM node:current-slim AS runner
 
 WORKDIR /app
 
@@ -37,7 +37,7 @@ COPY --from=builder /app/drizzle.config.ts ./drizzle.config.ts
 COPY --from=builder /app/scripts/migrate.mjs ./scripts/migrate.mjs
 COPY --from=builder /app/entrypoint.sh ./entrypoint.sh
 
-#official node:26.7.0-slim image already includes:
+#official node:current-slim image already includes:
  #
  #  uid=1000(node) gid=1000(node)
 USER node

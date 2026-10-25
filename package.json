@@ -2,7 +2,7 @@
   "name": "yai-hacker-news-tanstack",
   "version": "1.0.0",
   "description": "yet another anther hacker news clone, this time tan stack",
-  "packageManager": "pnpm@11.22.0",
+  "packageManager": "pnpm@12.15.0",
   "scripts": {
     "dev": "vite dev",
     "build": "vite build && tsc --noEmit",
@@ -25,39 +25,39 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@tanstack/react-router": "1.170.33",
-    "@tanstack/react-router-devtools": "1.167.1",
-    "@tanstack/react-start": "1.168.50",
-    "autoprefixer": "10.5.5",
-    "dotenv": "17.4.2",
-    "drizzle-orm": "0.45.2",
-    "inngest": "4.20.0",
+    "@tanstack/react-router": "1.170.46",
+    "@tanstack/react-router-devtools": "1.167.2",
+    "@tanstack/react-start": "1.169.4",
+    "autoprefixer": "10.6.1",
+    "dotenv": "18.0.9",
+    "drizzle-orm": "0.45.4",
+    "inngest": "4.26.0",
     "nitro": "3.0.260903-beta",
-    "postcss": "8.5.28",
+    "postcss": "8.5.31",
     "postgres": "3.4.9",
-    "react": "19.2.8",
-    "react-dom": "19.2.8",
-    "tailwind-merge": "3.6.0",
+    "react": "19.3.1",
+    "react-dom": "19.3.1",
+    "tailwind-merge": "3.7.0",
     "tailwindcss": "4.3.3",
     "timeago.js": "4.0.2",
-    "zod": "4.5.4"
+    "zod": "4.6.7"
   },
   "devDependencies": {
     "@tailwindcss/forms": "0.5.11",
     "@tailwindcss/vite": "4.3.3",
-    "@types/node": "26.5.0",
-    "@types/react": "19.2.18",
-    "@types/react-dom": "19.2.7",
-    "@vitejs/plugin-react": "6.1.1",
-    "drizzle-kit": "0.31.10",
+    "@types/node": "26.6.5",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "@vitejs/plugin-react": "6.1.2",
+    "drizzle-kit": "0.31.11",
     "husky": "9.1.7",
-    "lint-staged": "17.5.0",
-    "oxfmt": "0.67.0",
-    "oxlint": "1.82.0",
+    "lint-staged": "17.6.0",
+    "oxfmt": "0.74.0",
+    "oxlint": "1.89.0",
     "tsc-files": "1.1.4",
-    "tsx": "4.23.13",
+    "tsx": "4.23.15",
     "typescript": "7.0.2",
-    "vite": "8.2.2"
+    "vite": "8.3.5"
   },
   "lint-staged": {
     "*.{ts,tsx,js,jsx,mjs,cjs}": [
@@ -68,5 +68,8 @@
     "*.{json,css,md,yaml,yml}": [
       "oxfmt --write"
     ]
+  },
+  "engines": {
+    "node": ">=26.12.1"
   }
 }
